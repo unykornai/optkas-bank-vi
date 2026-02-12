@@ -40,6 +40,9 @@ Commands:
   escrow-plan        — Build escrow & settlement rail plan
   banking-resolve    — Resolve banking gaps across deal group
   cp-status          — Auto-resolve closing conditions from evidence
+  briefing-pack      — Generate full executive briefing pack for funding group
+  entity-standing    — Show where a specific entity stands
+  forward-path       — Show actionable forward roadmap
 """
 
 from __future__ import annotations
@@ -97,6 +100,7 @@ from engine.deal_dashboard import DealDashboardEngine
 from engine.escrow_engine import EscrowEngine
 from engine.banking_resolver import BankingResolverEngine
 from engine.cp_resolution import CPResolutionEngine
+from engine.briefing_pack import BriefingPackEngine
 from engine._icons import ICON_CHECK, ICON_CROSS, ICON_WARN
 
 console = Console()
@@ -1582,6 +1586,142 @@ def cp_status_cmd(
     if do_save:
         path = engine.save(report)
         console.print(f"\n{ICON_CHECK} Saved: {path}", style="green")
+
+
+# ---------------------------------------------------------------------------
+# briefing-pack
+# ---------------------------------------------------------------------------
+
+@main.command("briefing-pack")
+@click.option("-n", "--name", "deal_name", required=True, help="Deal group name")
+@click.option("-i", "--issuer", default=None, help="Path to issuer entity YAML")
+@click.option("-s", "--spv", default=None, help="Path to SPV entity YAML")
+@click.option("-p", "--platform", default=None, help="Path to platform entity YAML")
+@click.option("-v", "--investor", default=None, help="Path to investor entity YAML")
+@click.option("-e", "--entity", "extra_entities", multiple=True, help="Additional entity YAML(s)")
+@click.option("--save", "do_save", is_flag=True, help="Save briefing pack to JSON + Markdown")
+def briefing_pack_cmd(
+    deal_name: str, issuer: str | None, spv: str | None,
+    platform: str | None, investor: str | None,
+    extra_entities: tuple, do_save: bool,
+):
+    """Generate full executive briefing pack for funding group."""
+    engine = BriefingPackEngine()
+    pack = engine.build(
+        deal_name=deal_name,
+        issuer_path=Path(issuer) if issuer else None,
+        spv_path=Path(spv) if spv else None,
+        platform_path=Path(platform) if platform else None,
+        investor_path=Path(investor) if investor else None,
+        additional_entities=[Path(e) for e in extra_entities] if extra_entities else None,
+    )
+
+    console.print(Panel(
+        pack.render_markdown(),
+        title="EXECUTIVE BRIEFING PACK",
+        border_style="cyan",
+    ))
+
+    if do_save:
+        path = engine.save(pack)
+        console.print(f"\n{ICON_CHECK} Saved: {path}", style="green")
+        md_path = path.with_suffix(".md")
+        if md_path.exists():
+            console.print(f"{ICON_CHECK} Markdown: {md_path}", style="green")
+
+
+# ---------------------------------------------------------------------------
+# entity-standing
+# ---------------------------------------------------------------------------
+
+@main.command("entity-standing")
+@click.option("-e", "--entity", "entity_path", required=True, help="Path to entity YAML")
+@click.option("-r", "--role", default="PARTICIPANT", help="Role in deal (ISSUER, SPV, PLATFORM, INVESTOR)")
+def entity_standing_cmd(entity_path: str, role: str):
+    """Show where a specific entity stands — compliance, banking, evidence."""
+    engine = BriefingPackEngine()
+    standing = engine._build_entity_standing(Path(entity_path), role.upper())
+
+    lines = []
+    lines.append(f"Entity:           {standing.legal_name}")
+    lines.append(f"Role:             {standing.role_in_deal}")
+    lines.append(f"Type:             {standing.entity_type}")
+    lines.append(f"Jurisdiction:     {standing.jurisdiction} ({standing.jurisdiction_risk})")
+    if standing.formation_date:
+        lines.append(f"Formed:           {standing.formation_date}")
+    lines.append("")
+    lines.append(f"Banking Status:   {standing.banking_status}")
+    lines.append(f"                  {standing.banking_summary}")
+    lines.append(f"Evidence:         {standing.evidence_score} ({len(standing.evidence_files)} files)")
+    lines.append("")
+
+    if standing.strengths:
+        lines.append("STRENGTHS:")
+        for s in standing.strengths:
+            lines.append(f"  [+] {s}")
+        lines.append("")
+
+    if standing.gaps:
+        lines.append("GAPS / ACTION REQUIRED:")
+        for g in standing.gaps:
+            lines.append(f"  [!] {g}")
+        lines.append("")
+
+    color = "green" if not standing.gaps else ("yellow" if standing.banking_status != "NONE" else "red")
+    console.print(Panel("\n".join(lines), title=f"ENTITY STANDING: {standing.legal_name}", border_style=color))
+
+
+# ---------------------------------------------------------------------------
+# forward-path
+# ---------------------------------------------------------------------------
+
+@main.command("forward-path")
+@click.option("-n", "--name", "deal_name", required=True, help="Deal group name")
+@click.option("-i", "--issuer", default=None, help="Path to issuer entity YAML")
+@click.option("-s", "--spv", default=None, help="Path to SPV entity YAML")
+@click.option("-p", "--platform", default=None, help="Path to platform entity YAML")
+@click.option("-v", "--investor", default=None, help="Path to investor entity YAML")
+@click.option("-e", "--entity", "extra_entities", multiple=True, help="Additional entity YAML(s)")
+def forward_path_cmd(
+    deal_name: str, issuer: str | None, spv: str | None,
+    platform: str | None, investor: str | None,
+    extra_entities: tuple,
+):
+    """Show actionable forward roadmap — what to do next and when."""
+    engine = BriefingPackEngine()
+    pack = engine.build(
+        deal_name=deal_name,
+        issuer_path=Path(issuer) if issuer else None,
+        spv_path=Path(spv) if spv else None,
+        platform_path=Path(platform) if platform else None,
+        investor_path=Path(investor) if investor else None,
+        additional_entities=[Path(e) for e in extra_entities] if extra_entities else None,
+    )
+
+    fp = pack.forward_path
+    lines = []
+    lines.append(f"Total Actions:     {fp.total_actions}")
+    lines.append(f"Completed:         {fp.completed}")
+    lines.append(f"Critical Actions:  {len(fp.critical_actions)}")
+    lines.append("")
+
+    for phase_num in sorted(fp.by_phase.keys()):
+        phase_actions = fp.by_phase[phase_num]
+        phase_info = fp.phases[phase_num - 1] if phase_num <= len(fp.phases) else {}
+        lines.append(f"═══ PHASE {phase_num}: {phase_info.get('name', '')} ═══")
+        lines.append(f"    Target: {phase_info.get('target', '')}")
+        lines.append(f"    Timeline: {phase_info.get('timeline', '')}")
+        lines.append("")
+
+        for a in phase_actions:
+            icon = {"COMPLETE": "[✓]", "IN_PROGRESS": "[~]", "NOT_STARTED": "[ ]"}.get(a.status, "[ ]")
+            lines.append(f"    {icon} [{a.priority}] {a.description}")
+            lines.append(f"          Responsible: {a.responsible}")
+            if a.dependency:
+                lines.append(f"          Depends on: {a.dependency}")
+            lines.append("")
+
+    console.print(Panel("\n".join(lines), title="FORWARD PATH", border_style="cyan"))
 
 
 @main.command("list-types")
