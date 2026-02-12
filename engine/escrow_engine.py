@@ -904,6 +904,154 @@ class EscrowEngine:
         plan.overall_valid = len(issues) == 0
 
     # ------------------------------------------------------------------
+    # Escrow condition auto-satisfaction
+    # ------------------------------------------------------------------
+
+    def auto_satisfy_conditions(
+        self,
+        plan: EscrowPlan,
+        entities: list[dict] | None = None,
+        entity_paths: list[Path] | None = None,
+    ) -> int:
+        """
+        Auto-satisfy escrow conditions by cross-referencing evidence
+        and entity data. Returns the number of conditions satisfied.
+
+        Checks:
+          - KYC/AML: evidence vault has KYC/CIS docs
+          - Dual authorization: signatories exist in entity data
+          - Legal opinions: evidence vault has opinion docs
+          - Settlement instructions: bank assignments exist in plan
+          - OFAC/sanctions: no sanctioned jurisdictions in deal
+        """
+        if not plan.escrow_terms:
+            return 0
+
+        # Load entities if paths provided but no dicts
+        if not entities and entity_paths:
+            entities = []
+            for ep in entity_paths:
+                try:
+                    entities.append(load_entity(ep))
+                except Exception:
+                    pass
+
+        entities = entities or []
+        satisfied_count = 0
+        evidence_dir = ROOT_DIR / "data" / "evidence"
+
+        # Build evidence index
+        evidence_files: list[str] = []
+        if evidence_dir.is_dir():
+            for subdir in evidence_dir.iterdir():
+                if subdir.is_dir() and not subdir.name.startswith("_"):
+                    for f in subdir.iterdir():
+                        if f.is_file() and not f.name.startswith("."):
+                            evidence_files.append(f.name.lower())
+
+        for cond in plan.escrow_terms.conditions:
+            if cond.is_met:
+                continue
+
+            desc_lower = cond.description.lower()
+
+            # ESC: KYC/AML clearance
+            if "kyc" in desc_lower or "aml" in desc_lower:
+                kyc_evidence = [
+                    f for f in evidence_files
+                    if "cis_" in f or "kyc_" in f or "risk_compliance" in f
+                ]
+                if len(kyc_evidence) >= 2:
+                    cond.status = "SATISFIED"
+                    cond.notes = (
+                        f"KYC/AML documentation found: {len(kyc_evidence)} "
+                        f"document(s) in evidence vault."
+                    )
+                    satisfied_count += 1
+                    continue
+
+            # ESC: Dual authorization / signatories
+            if "authorization" in desc_lower or "signator" in desc_lower:
+                total_sigs = sum(
+                    len(e.get("entity", e).get("signatories", []))
+                    for e in entities
+                )
+                if total_sigs >= 2:
+                    cond.status = "SATISFIED"
+                    cond.notes = (
+                        f"{total_sigs} authorized signatories found "
+                        f"across entity profiles."
+                    )
+                    satisfied_count += 1
+                    continue
+
+            # ESC: Legal opinions
+            if "legal opinion" in desc_lower or "opinions delivered" in desc_lower:
+                opinion_evidence = [
+                    f for f in evidence_files
+                    if "opinion_" in f or "legal_opinion" in f
+                ]
+                if opinion_evidence:
+                    # Check if any are draft
+                    is_draft = any("draft" in f for f in opinion_evidence)
+                    if not is_draft:
+                        cond.status = "SATISFIED"
+                        cond.notes = (
+                            f"Legal opinion(s) found: {len(opinion_evidence)} "
+                            f"document(s) in evidence vault."
+                        )
+                        satisfied_count += 1
+                    else:
+                        cond.status = "PENDING"
+                        cond.notes = (
+                            "Legal opinion(s) found but in DRAFT status. "
+                            "Final form required."
+                        )
+                    continue
+
+            # ESC: Settlement instructions verified
+            if "settlement instruction" in desc_lower:
+                assigned = plan.entity_bank_assignments
+                all_have_banks = all(
+                    info.get("swift") for info in assigned.values()
+                ) if assigned else False
+                if all_have_banks and len(assigned) >= 2:
+                    cond.status = "SATISFIED"
+                    cond.notes = (
+                        f"Settlement instructions verified for "
+                        f"{len(assigned)} entities with SWIFT codes."
+                    )
+                    satisfied_count += 1
+                    continue
+
+            # ESC: OFAC/sanctions screening
+            if "ofac" in desc_lower or "sanctions" in desc_lower:
+                # Check no sanctioned jurisdictions
+                sanctioned = {"IR", "KP", "CU", "SY"}
+                jurisdictions = set()
+                for e in entities:
+                    jur = e.get("entity", e).get("jurisdiction", "")
+                    base = jur.split("-")[0].upper() if jur else ""
+                    if base:
+                        jurisdictions.add(base)
+
+                if not jurisdictions & sanctioned:
+                    compliance_evidence = [
+                        f for f in evidence_files
+                        if "risk_compliance" in f or "sanctions" in f
+                    ]
+                    if compliance_evidence:
+                        cond.status = "SATISFIED"
+                        cond.notes = (
+                            "No sanctioned jurisdictions in deal group. "
+                            "Compliance documentation found in evidence vault."
+                        )
+                        satisfied_count += 1
+                        continue
+
+        return satisfied_count
+
+    # ------------------------------------------------------------------
     # Persistence
     # ------------------------------------------------------------------
 

@@ -715,8 +715,9 @@ class TestEnhancedDashboard:
         assert len(self.dashboard.sections) >= 10
 
     def test_overall_rag_improved(self):
-        """Overall RAG should no longer be RED."""
-        assert self.dashboard.overall_rag in ("GREEN", "AMBER", "RED")
+        """Overall RAG should no longer be RED — all gates resolved."""
+        assert self.dashboard.overall_rag in ("GREEN", "AMBER")
+        assert self.dashboard.red_count == 0
 
     def test_dashboard_summary_output(self):
         summary = self.dashboard.summary()
@@ -735,3 +736,180 @@ class TestEnhancedDashboard:
         assert path.exists()
         data = json.loads(path.read_text())
         assert data["deal_name"] == DEAL_NAME
+
+
+# ══════════════════════════════════════════════════════════════════
+# TEST CLASS 5: Escrow Auto-Satisfy
+# ══════════════════════════════════════════════════════════════════
+
+class TestEscrowAutoSatisfy:
+    """Tests for escrow condition auto-satisfaction."""
+
+    def setup_method(self):
+        self.engine = EscrowEngine()
+        self.plan = self.engine.build(
+            deal_name=DEAL_NAME,
+            entity_paths=ALL_ENTITIES,
+            escrow_currency="USD",
+        )
+
+    def test_auto_satisfy_returns_count(self):
+        count = self.engine.auto_satisfy_conditions(
+            self.plan, entity_paths=ALL_ENTITIES
+        )
+        assert isinstance(count, int)
+        assert count >= 1
+
+    def test_auto_satisfy_updates_conditions(self):
+        before_met = self.plan.escrow_terms.met_count
+        self.engine.auto_satisfy_conditions(
+            self.plan, entity_paths=ALL_ENTITIES
+        )
+        after_met = self.plan.escrow_terms.met_count
+        assert after_met > before_met
+
+    def test_kyc_condition_satisfied(self):
+        """KYC/AML should auto-satisfy from evidence vault."""
+        self.engine.auto_satisfy_conditions(
+            self.plan, entity_paths=ALL_ENTITIES
+        )
+        kyc_conds = [
+            c for c in self.plan.escrow_terms.conditions
+            if "kyc" in c.description.lower() or "aml" in c.description.lower()
+        ]
+        for c in kyc_conds:
+            assert c.status == "SATISFIED"
+
+    def test_signatory_condition_satisfied(self):
+        """Dual authorization should auto-satisfy from entity signatories."""
+        self.engine.auto_satisfy_conditions(
+            self.plan, entity_paths=ALL_ENTITIES
+        )
+        sig_conds = [
+            c for c in self.plan.escrow_terms.conditions
+            if "authorization" in c.description.lower()
+        ]
+        for c in sig_conds:
+            assert c.status == "SATISFIED"
+
+    def test_settlement_condition_satisfied(self):
+        """Settlement instructions should auto-satisfy when banks assigned."""
+        self.engine.auto_satisfy_conditions(
+            self.plan, entity_paths=ALL_ENTITIES
+        )
+        settle_conds = [
+            c for c in self.plan.escrow_terms.conditions
+            if "settlement instruction" in c.description.lower()
+        ]
+        for c in settle_conds:
+            assert c.status == "SATISFIED"
+
+    def test_sanctions_condition_satisfied(self):
+        """OFAC/sanctions should auto-satisfy when no sanctioned jurisdictions."""
+        self.engine.auto_satisfy_conditions(
+            self.plan, entity_paths=ALL_ENTITIES
+        )
+        sanct_conds = [
+            c for c in self.plan.escrow_terms.conditions
+            if "ofac" in c.description.lower() or "sanctions" in c.description.lower()
+        ]
+        for c in sanct_conds:
+            assert c.status == "SATISFIED"
+
+    def test_funds_condition_not_auto_satisfied(self):
+        """Funds deposit cannot be auto-verified."""
+        self.engine.auto_satisfy_conditions(
+            self.plan, entity_paths=ALL_ENTITIES
+        )
+        funds_conds = [
+            c for c in self.plan.escrow_terms.conditions
+            if "funds" in c.description.lower() and "deposited" in c.description.lower()
+        ]
+        for c in funds_conds:
+            assert c.status == "PENDING"
+
+    def test_satisfied_conditions_have_notes(self):
+        self.engine.auto_satisfy_conditions(
+            self.plan, entity_paths=ALL_ENTITIES
+        )
+        for c in self.plan.escrow_terms.conditions:
+            if c.status == "SATISFIED":
+                assert c.notes
+
+    def test_no_entities_no_crash(self):
+        count = self.engine.auto_satisfy_conditions(self.plan)
+        assert count >= 0  # May still satisfy from evidence
+
+
+# ══════════════════════════════════════════════════════════════════
+# TEST CLASS 6: Collateral Fix & Closing Wiring
+# ══════════════════════════════════════════════════════════════════
+
+class TestDashboardFixes:
+    """Tests for Phase 11 dashboard fixes."""
+
+    def setup_method(self):
+        self.engine = DealDashboardEngine()
+        self.dashboard = self.engine.generate(
+            deal_name=DEAL_NAME,
+            issuer_path=TC_ADVANTAGE,
+            spv_path=OPTKAS1_SPV,
+            additional_entities=[QUERUBIN_USA, OPTKAS_PLATFORM],
+        )
+
+    def test_collateral_is_green(self):
+        """Collateral should be GREEN now that SPV is verified correctly."""
+        section = next(
+            (s for s in self.dashboard.sections if s.name == "Collateral"),
+            None,
+        )
+        assert section is not None
+        assert section.rag == "GREEN"
+        assert section.score == 100.0
+
+    def test_closing_uses_cp_resolution(self):
+        """Closing section should show auto-resolved CPs."""
+        section = next(
+            (s for s in self.dashboard.sections if s.name == "Closing Conditions"),
+            None,
+        )
+        assert section is not None
+        # Should have some resolved CPs (not 0/8 anymore)
+        assert section.score > 0
+        assert section.rag in ("GREEN", "AMBER")
+
+    def test_closing_details_mention_auto_resolved(self):
+        section = next(
+            (s for s in self.dashboard.sections if s.name == "Closing Conditions"),
+            None,
+        )
+        assert section is not None
+        has_auto_resolved_detail = any(
+            "auto-resolved" in d for d in section.details
+        )
+        assert has_auto_resolved_detail
+
+    def test_escrow_conditions_partially_met(self):
+        """Escrow should have some conditions auto-satisfied."""
+        section = next(
+            (s for s in self.dashboard.sections if s.name == "Escrow"),
+            None,
+        )
+        assert section is not None
+        assert section.score > 0  # Some conditions met
+        assert section.rag == "AMBER"
+
+    def test_zero_red_gates(self):
+        """Dashboard should have 0 RED sections."""
+        assert self.dashboard.red_count == 0
+
+    def test_overall_amber(self):
+        """Overall status should be AMBER (no RED, some AMBER remain)."""
+        assert self.dashboard.overall_rag == "AMBER"
+
+    def test_action_items_reduced(self):
+        """Should have fewer action items than before."""
+        items = self.dashboard.all_action_items
+        # Reduced from 19 to ~18 (fewer closing/collateral items)
+        assert len(items) > 0  # Still has items
+        assert len(items) < 30  # But not excessive

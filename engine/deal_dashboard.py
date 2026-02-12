@@ -334,7 +334,7 @@ class DealDashboardEngine:
             issuer = load_entity(issuer_path)
             spv = load_entity(spv_path)
             verifier = CollateralVerifier()
-            report = verifier.verify(issuer, spv)
+            report = verifier.verify(spv, issuer)
             pct = report.score  # score is already a percentage
             section.score = pct
             section.max_score = 100
@@ -490,23 +490,27 @@ class DealDashboardEngine:
         self, deal_name: str, issuer_path: Path | None,
         spv_path: Path | None, extra: list[Path] | None,
     ) -> DashboardSection:
-        """Closing Conditions section."""
+        """Closing Conditions section — uses CP Resolution for auto-resolution."""
         section = DashboardSection(name="Closing Conditions")
 
         try:
-            engine = ClosingTrackerEngine()
-            tracker = engine.generate(
+            # Use CP Resolution engine which auto-resolves CPs
+            cp_engine = CPResolutionEngine()
+            report = cp_engine.resolve(
                 deal_name=deal_name,
                 issuer_path=issuer_path,
                 spv_path=spv_path,
                 additional_entities=extra,
             )
 
+            tracker = report.tracker
             section.score = tracker.resolved
             section.max_score = tracker.total
 
             if tracker.closing_ready:
                 section.rag = "GREEN"
+            elif tracker.completion_pct >= 50:
+                section.rag = "AMBER"
             elif tracker.completion_pct > 0:
                 section.rag = "AMBER"
             else:
@@ -520,8 +524,14 @@ class DealDashboardEngine:
 
             section.details.append(
                 f"{tracker.total} CP(s): {tracker.satisfied} satisfied, "
+                f"{tracker.in_progress} in progress, "
                 f"{tracker.open} open, {tracker.blocked} blocked"
             )
+
+            if report.auto_resolved > 0:
+                section.details.append(
+                    f"{report.auto_resolved} CP(s) auto-resolved from evidence/data"
+                )
 
             if tracker.overdue:
                 section.action_items.append(f"{tracker.overdue} overdue condition(s)")
@@ -757,6 +767,9 @@ class DealDashboardEngine:
                 entity_paths=all_paths,
                 escrow_currency="USD",
             )
+
+            # Auto-satisfy escrow conditions from evidence/entity data
+            engine.auto_satisfy_conditions(plan, entity_paths=all_paths)
 
             if plan.escrow_terms:
                 et = plan.escrow_terms

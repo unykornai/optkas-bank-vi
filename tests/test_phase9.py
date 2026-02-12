@@ -513,10 +513,10 @@ class TestDealDashboard:
         assert mtn.rag == "GREEN"
         assert mtn.score is not None
 
-    def test_collateral_section_red(self):
-        """Collateral RED for real entities (44.4% — 0 pass, 8 warn, 1 fail)."""
+    def test_collateral_section_green(self):
+        """Collateral GREEN — parameter order fixed, SPV correctly verified."""
         coll = next(s for s in self.dashboard.sections if s.name == "Collateral")
-        assert coll.rag == "RED"
+        assert coll.rag == "GREEN"
         assert coll.score is not None
 
     def test_readiness_section_amber(self):
@@ -534,10 +534,10 @@ class TestDealDashboard:
         assert risk.rag in ("GREEN", "AMBER", "RED")
         assert risk.score is not None
 
-    def test_closing_section_red(self):
-        """Closing should be RED (0% completion — no CPs resolved)."""
+    def test_closing_section_resolved(self):
+        """Closing should be AMBER (CP Resolution auto-resolves CPs)."""
         closing = next(s for s in self.dashboard.sections if s.name == "Closing Conditions")
-        assert closing.rag == "RED"
+        assert closing.rag in ("GREEN", "AMBER")
 
     def test_settlement_section_resolved(self):
         """Settlement should be GREEN or AMBER (escrow engine resolves rails)."""
