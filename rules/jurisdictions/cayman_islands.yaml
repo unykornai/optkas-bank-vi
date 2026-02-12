@@ -1,0 +1,103 @@
+# ============================================================
+# JURISDICTION RULES — CAYMAN ISLANDS
+# ============================================================
+
+jurisdiction: "KY"
+name: "Cayman Islands"
+legal_system: "common_law"
+currency: "KYD"
+primary_regulators:
+  - "Cayman Islands Monetary Authority (CIMA)"
+  - "Department of International Tax Cooperation (DITC)"
+  - "Cayman Islands Financial Reporting Authority (FRA)"
+
+required_clauses:
+  - governing_law
+  - arbitration_clause
+  - aml_representation
+  - sanctions_compliance
+  - beneficial_owner_declaration
+  - representations
+  - signatory_block
+
+aml_requirements:
+  statutes:
+    - name: "Proceeds of Crime Act"
+      citation: "2020 Revision"
+    - name: "Anti-Money Laundering Regulations"
+      citation: "2020 Revision"
+    - name: "Beneficial Ownership Transparency Act"
+      citation: "2020"
+  require_beneficial_ownership_declaration: true
+  require_beneficial_ownership_register: true
+  require_sanctions_screening: true
+  require_pep_screening: true
+
+if_fund:
+  require:
+    - cima_registration
+    - registered_office_in_cayman
+    - licensed_administrator
+    - audited_financial_statements
+  fund_types:
+    - registered_fund:
+        min_investment_usd: 100000
+        max_investors: 15
+    - master_fund:
+        min_investment_usd: 0
+        no_investor_limit: true
+    - limited_investor_fund:
+        max_investors: 15
+        min_investment_usd: 1000000
+    - private_fund:
+        max_investors: 15
+    - spc:
+        description: "Segregated Portfolio Company"
+
+if_security_offering:
+  require:
+    - private_placement_only  # No public offerings in Cayman
+    - transfer_restrictions
+    - offering_memorandum
+  note: "Cayman Islands does not have a securities exchange; all offerings are private"
+
+if_cross_border:
+  require:
+    - source_of_funds_declaration
+    - economic_substance_compliance
+    - crs_reporting
+    - fatca_reporting
+  economic_substance:
+    statute: "International Tax Co-operation (Economic Substance) Act"
+    citation: "2018 (as amended)"
+    relevant_activities:
+      - banking
+      - insurance
+      - fund_management
+      - financing_and_leasing
+      - headquarters
+      - shipping
+      - distribution_and_service
+      - intellectual_property
+      - holding_company
+
+tax:
+  corporate_tax_rate: 0
+  capital_gains_tax: 0
+  withholding_tax: 0
+  note: "Tax-neutral jurisdiction — no direct taxes"
+
+governing_law:
+  default: "Laws of the Cayman Islands"
+  alternative_for_transactions: "Laws of England and Wales"
+
+dispute_resolution:
+  preferred: "arbitration"
+  arbitration_body: "London Court of International Arbitration (LCIA)"
+  court_alternative: "Grand Court of the Cayman Islands"
+
+signatory_requirements:
+  require_certificate_of_good_standing: true
+  require_registered_office_confirmation: true
+  require_board_resolution: true
+  require_notarization: false

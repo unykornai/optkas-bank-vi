@@ -1,0 +1,227 @@
+# ============================================================
+# TRANSACTION TYPE DEFINITIONS
+# ============================================================
+# Defines available transaction types and their required
+# contract modules, conditions, and special requirements.
+# ============================================================
+
+schema_version: "1.0"
+
+transaction_types:
+
+  loan_agreement:
+    display_name: "Loan Agreement"
+    category: "debt"
+    required_modules:
+      - recitals
+      - definitions
+      - representations
+      - covenants
+      - aml_clause
+      - sanctions_compliance
+      - indemnification
+      - limitation_of_liability
+      - governing_law
+      - arbitration_clause
+      - conditions_precedent
+      - closing_mechanics
+      - signatory_block
+    conditional_modules:
+      cross_border:
+        - source_of_funds
+        - currency_controls
+        - escrow_conditions
+      secured:
+        - security_interest
+    requires_signatory_authority:
+      can_bind_company: true
+      can_pledge_assets: false  # true if secured
+    minimum_conditions_precedent:
+      - "Entity formation documents"
+      - "Good standing certificates"
+      - "Board resolution authorizing transaction"
+      - "AML/KYC documentation"
+      - "Financial statements (audited, last 2 years)"
+
+  security_agreement:
+    display_name: "Security Agreement"
+    category: "collateral"
+    required_modules:
+      - recitals
+      - definitions
+      - representations
+      - security_interest
+      - covenants
+      - aml_clause
+      - sanctions_compliance
+      - indemnification
+      - governing_law
+      - arbitration_clause
+      - conditions_precedent
+      - closing_mechanics
+      - signatory_block
+    conditional_modules:
+      cross_border:
+        - source_of_funds
+        - currency_controls
+    requires_signatory_authority:
+      can_bind_company: true
+      can_pledge_assets: true
+    minimum_conditions_precedent:
+      - "UCC filing authorization"
+      - "Collateral schedule"
+      - "Title verification for pledged assets"
+      - "Board resolution authorizing pledge"
+
+  subscription_agreement:
+    display_name: "Subscription Agreement"
+    category: "securities"
+    required_modules:
+      - recitals
+      - definitions
+      - representations
+      - accredited_investor
+      - transfer_restrictions
+      - aml_clause
+      - sanctions_compliance
+      - indemnification
+      - limitation_of_liability
+      - governing_law
+      - arbitration_clause
+      - conditions_precedent
+      - closing_mechanics
+      - signatory_block
+    conditional_modules:
+      cross_border:
+        - source_of_funds
+        - currency_controls
+      reg_d:
+        - accredited_investor
+      reg_s:
+        - transfer_restrictions
+    requires_signatory_authority:
+      can_bind_company: true
+      can_move_funds: true
+    minimum_conditions_precedent:
+      - "Accredited investor questionnaire"
+      - "Subscription amount wire instructions"
+      - "Private placement memorandum acknowledgment"
+
+  share_purchase_agreement:
+    display_name: "Share Purchase Agreement"
+    category: "securities"
+    required_modules:
+      - recitals
+      - definitions
+      - representations
+      - transfer_restrictions
+      - covenants
+      - aml_clause
+      - sanctions_compliance
+      - indemnification
+      - limitation_of_liability
+      - governing_law
+      - arbitration_clause
+      - conditions_precedent
+      - closing_mechanics
+      - signatory_block
+    conditional_modules:
+      cross_border:
+        - source_of_funds
+        - currency_controls
+        - escrow_conditions
+    requires_signatory_authority:
+      can_bind_company: true
+      can_move_funds: true
+    minimum_conditions_precedent:
+      - "Share certificates or book-entry evidence"
+      - "Shareholder register"
+      - "Board approval for transfer"
+      - "Right of first refusal waiver (if applicable)"
+
+  custody_agreement:
+    display_name: "Custody Agreement"
+    category: "operations"
+    required_modules:
+      - recitals
+      - definitions
+      - representations
+      - covenants
+      - aml_clause
+      - sanctions_compliance
+      - indemnification
+      - limitation_of_liability
+      - governing_law
+      - arbitration_clause
+      - conditions_precedent
+      - closing_mechanics
+      - signatory_block
+    conditional_modules:
+      cross_border:
+        - currency_controls
+    requires_signatory_authority:
+      can_bind_company: true
+      can_move_funds: true
+    minimum_conditions_precedent:
+      - "Custodian regulatory license verification"
+      - "Insurance coverage confirmation"
+      - "Sub-custodian disclosure"
+
+  escrow_agreement:
+    display_name: "Escrow Agreement"
+    category: "operations"
+    required_modules:
+      - recitals
+      - definitions
+      - representations
+      - escrow_conditions
+      - aml_clause
+      - sanctions_compliance
+      - indemnification
+      - governing_law
+      - arbitration_clause
+      - conditions_precedent
+      - closing_mechanics
+      - signatory_block
+    requires_signatory_authority:
+      can_bind_company: true
+      can_move_funds: true
+    minimum_conditions_precedent:
+      - "Escrow agent engagement letter"
+      - "Release conditions schedule"
+      - "Fee schedule acknowledgment"
+
+  bond_purchase_agreement:
+    display_name: "Bond/Note Purchase Agreement"
+    category: "securities"
+    required_modules:
+      - recitals
+      - definitions
+      - representations
+      - accredited_investor
+      - transfer_restrictions
+      - covenants
+      - security_interest
+      - aml_clause
+      - sanctions_compliance
+      - indemnification
+      - limitation_of_liability
+      - governing_law
+      - arbitration_clause
+      - conditions_precedent
+      - closing_mechanics
+      - signatory_block
+    conditional_modules:
+      cross_border:
+        - source_of_funds
+        - currency_controls
+        - escrow_conditions
+    requires_signatory_authority:
+      can_bind_company: true
+      can_move_funds: true
+      can_pledge_assets: true
+    minimum_conditions_precedent:
+      - "Bond indenture"
+      - "Paying agent appointment"
+      - "Rating agency letter (if applicable)"
+      - "Clearing system eligibility (DTC/Euroclear)"

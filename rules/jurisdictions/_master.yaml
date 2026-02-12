@@ -1,0 +1,67 @@
+# ============================================================
+# MASTER JURISDICTION INDEX
+# ============================================================
+# Maps jurisdiction codes to rule files.
+# All jurisdiction codes follow ISO 3166-1 alpha-2 (countries)
+# or ISO 3166-2 (sub-national, e.g., US-DE for Delaware).
+# ============================================================
+
+schema_version: "1.0"
+
+# Supported jurisdictions
+jurisdictions:
+  US:
+    name: "United States of America"
+    rule_file: "us.yaml"
+    sub_jurisdictions:
+      US-DE: "Delaware"
+      US-NY: "New York"
+      US-CA: "California"
+      US-TX: "Texas"
+      US-FL: "Florida"
+
+  VN:
+    name: "Socialist Republic of Vietnam"
+    rule_file: "vietnam.yaml"
+
+  CH:
+    name: "Swiss Confederation"
+    rule_file: "switzerland.yaml"
+
+  GB:
+    name: "United Kingdom"
+    rule_file: "uk.yaml"
+
+  SG:
+    name: "Republic of Singapore"
+    rule_file: "singapore.yaml"
+
+  KY:
+    name: "Cayman Islands"
+    rule_file: "cayman_islands.yaml"
+
+# Global rules applied to ALL jurisdictions
+global_required_clauses:
+  - governing_law
+  - dispute_resolution
+  - representations
+  - aml_clause
+  - signatory_block
+
+# Cross-border transaction auto-triggers
+cross_border_triggers:
+  - source_of_funds
+  - sanctions_compliance
+  - currency_controls
+  - anti_bribery
+  - tax_representations
+  - escrow_conditions
+
+# Securities transaction auto-triggers
+securities_triggers:
+  - transfer_restrictions
+  - accredited_investor
+  - no_public_offering
+  - risk_factors
+  - custody_language
+  - clearing_instructions

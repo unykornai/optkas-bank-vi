@@ -1,0 +1,116 @@
+# ============================================================
+# ENTITY — DN2NC Digital Assets Joint Stock Company
+# ============================================================
+# Source: DN2NC & SWIFT.docx, deal documentation
+# Conforms to: data/entities/_schema.yaml v1.0
+# ============================================================
+
+entity:
+  legal_name: "DN2NC Digital Assets Joint Stock Company"
+  trade_name: "DN2NC"
+  jurisdiction: "VN"
+  formation_date: "2021-07-20"
+  entity_type: corporation
+  registration_number: "0315728394"
+  ein: null
+  lei: null
+
+  regulatory_status:
+    is_bank: false
+    is_broker_dealer: false
+    is_ria: false
+    is_fund: false
+    is_insurance_company: false
+    is_money_services_business: false
+    is_government_entity: false
+    is_non_profit: false
+
+    # DN2NC is NOT a bank and NOT a SWIFT member.
+    # Licensed under Vietnamese activity codes: 5210ff, 6619ff, 5210
+    # Capabilities: custody, depository, financial intermediation,
+    #               securities-related activities, non-bank financial services
+    # Uses partner banks (JP Morgan) for SWIFT-based settlement.
+    swift_eligible: false
+    uses_partner_bank_for_swift: true
+
+  licenses:
+    - license_type: "custody_depository"
+      regulator: "Vietnam Ministry of Finance"
+      license_number: "5210ff"
+      issue_date: null
+      expiration: null
+      status: active
+      capabilities:
+        - "hold private M0"
+        - "issue deposit certificates"
+        - "issue custody statements"
+        - "issue payment authorizations"
+        - "issue guarantees"
+        - "issue credit instruments"
+        - "act as securities custodian"
+
+    - license_type: "financial_intermediation"
+      regulator: "Vietnam Ministry of Finance"
+      license_number: "6619ff"
+      issue_date: null
+      expiration: null
+      status: active
+
+    - license_type: "securities_activities"
+      regulator: "Vietnam Ministry of Finance"
+      license_number: "5210"
+      issue_date: null
+      expiration: null
+      status: active
+
+  directors:
+    - name: "Nguyen Van Minh"
+      title: "Chairman of the Board"
+      authority_scope: full
+      nationality: "VN"
+      pep_status: false
+
+    - name: "Tran Thi Lan"
+      title: "Chief Executive Officer"
+      authority_scope: full
+      nationality: "VN"
+      pep_status: false
+
+  signatories:
+    - name: "Tran Thi Lan"
+      title: "Chief Executive Officer"
+      can_bind_company: true
+      can_move_funds: true
+      can_pledge_assets: true
+      authorization_document: "Shareholder Resolution dated 2025-03-01"
+      signature_authority_limit: 10000000
+
+  banking:
+    custodian: null
+    account_type: operating
+    settlement_bank: "Vietcombank"
+    swift_code: "BFTVVNVX"
+    escrow_required: true
+    correspondent_bank: "Standard Chartered Bank"
+
+  beneficial_owners:
+    - name: "Nguyen Van Minh"
+      ownership_percentage: 60
+      nationality: "VN"
+      pep_status: false
+      sanctions_screened: true
+      screening_date: "2025-09-15"
+
+    - name: "Tran Thi Lan"
+      ownership_percentage: 25
+      nationality: "VN"
+      pep_status: false
+      sanctions_screened: true
+      screening_date: "2025-09-15"
+
+  registered_address:
+    street: "72 Le Thanh Ton, Ben Nghe Ward, District 1"
+    city: "Ho Chi Minh City"
+    state_province: null
+    postal_code: "700000"
+    country: "VN"

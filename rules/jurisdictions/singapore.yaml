@@ -1,0 +1,83 @@
+# ============================================================
+# JURISDICTION RULES — SINGAPORE
+# ============================================================
+
+jurisdiction: "SG"
+name: "Republic of Singapore"
+legal_system: "common_law"
+currency: "SGD"
+primary_regulators:
+  - "Monetary Authority of Singapore (MAS)"
+  - "Accounting and Corporate Regulatory Authority (ACRA)"
+  - "Suspicious Transaction Reporting Office (STRO)"
+
+required_clauses:
+  - governing_law
+  - arbitration_clause
+  - aml_representation
+  - sanctions_compliance
+  - representations
+  - signatory_block
+
+aml_requirements:
+  statutes:
+    - name: "Corruption, Drug Trafficking and Other Serious Crimes Act"
+      citation: "CDSA, Cap 65A"
+    - name: "MAS Notice on Prevention of Money Laundering and Countering the Financing of Terrorism"
+      citation: "MAS Notice 626"
+    - name: "Terrorism (Suppression of Financing) Act"
+      citation: "TSOFA, Cap 325"
+  require_beneficial_ownership_declaration: true
+  require_sanctions_screening: true
+  require_pep_screening: true
+
+if_security_offering:
+  require:
+    - mas_license_or_exemption
+    - prospectus_if_public
+    - private_placement_exemption
+    - transfer_restrictions
+    - accredited_investor_representation
+  private_placement:
+    max_investors: 50
+    accredited_investor_only: true
+    citation: "Securities and Futures Act, s.272B"
+  accredited_investor:
+    individual_net_worth_sgd: 2000000
+    individual_income_sgd: 300000
+
+if_cross_border:
+  require:
+    - source_of_funds_declaration
+    - anti_bribery_compliance
+    - tax_withholding_clause
+    - sanctions_compliance
+  anti_bribery:
+    statute: "Prevention of Corruption Act"
+    citation: "PCA, Cap 241"
+  withholding_tax:
+    interest_rate: 15
+    treaty_override: true
+
+if_fund_management:
+  require_license_from:
+    - "MAS"
+  license_types:
+    - "Registered Fund Management Company (RFMC)"
+    - "Licensed Fund Management Company (LFMC)"
+    - "Venture Capital Fund Manager (VCFM)"
+
+governing_law:
+  default: "Laws of the Republic of Singapore"
+
+dispute_resolution:
+  preferred: "arbitration"
+  arbitration_body: "Singapore International Arbitration Centre (SIAC)"
+  court_alternative: "High Court of the Republic of Singapore"
+  new_york_convention_member: true
+
+signatory_requirements:
+  require_acra_extract: true
+  require_board_resolution: true
+  require_notarization: false
+  require_company_seal: false  # abolished in 2017

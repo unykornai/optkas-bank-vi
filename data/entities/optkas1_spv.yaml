@@ -1,0 +1,163 @@
+entity:
+  legal_name: "OPTKAS1-MAIN"
+  trade_name: "OPTKAS1"
+  jurisdiction: "US-WY"
+  formation_date: null
+  entity_type: "special_purpose_vehicle"
+  registration_number: null
+  ein: null
+  lei: null
+
+  regulatory_status:
+    status: "operational"
+    swift_eligible: false
+    uses_partner_bank_for_swift: true
+    spv_characteristics:
+      - "Bankruptcy-remote"
+      - "UCC-perfected"
+      - "Independent trustee oversight"
+      - "Segregated asset pools"
+      - "Clear beneficial ownership records"
+    notes:
+      - "Wyoming Special Purpose Vehicle"
+      - "Acquires and pledges tranches of TC Advantage MTNs as collateral"
+      - "Maintains Optima XRPL System for reserve registry and proof-of-reserves"
+      - "Not a bank — uses banking partners for settlement"
+
+  licenses: []
+
+  directors:
+    - name: "OPTKAS Managing Member"
+      title: "Managing Member"
+      nationality: null
+      residence: "US"
+  signatories:
+    - name: "OPTKAS Managing Member"
+      title: "Managing Member"
+      authority: "full"
+  beneficial_owners: []
+
+  registered_address:
+    street: null
+    city: null
+    state: "WY"
+    country: "US"
+    postal_code: null
+    notes: "Wyoming SPV -- jurisdiction selected for favorable LLC/SPV law"
+
+  banking:
+    custodian: "Securities Transfer Corporation"
+    settlement_bank: null
+    swift_code: null
+    aba_routing: null
+    account_number: null
+    ultimate_beneficiary_name: "OPTKAS1-MAIN"
+    notes:
+      - "STC holds position statements evidencing tranche ownership"
+      - "Settlement via DTC/DWAC FAST system through STC"
+      - "Banking rails provided through lender/funding partner"
+
+  address:
+    state: "WY"
+    country: "US"
+    notes: "Wyoming SPV — jurisdiction selected for favorable LLC/SPV law"
+
+  # -- Collateral Holdings --
+  collateral_holdings:
+    instrument: "TC Advantage Traders 5% Secured Medium Term Notes"
+    issuer: "TC Advantage Traders, Ltd."
+    issuer_jurisdiction: "BS"
+    tranche_status: "pending_subscription"
+    cusips_referenced:
+      - "87225HAB4"
+      - "P9000TAA8"
+    ownership_evidence: "STC position statement"
+    pledge_mechanism: "Security Agreement with Lender"
+    perfection: "UCC filing in Wyoming + custodial control at STC"
+
+  # -- XRPL Reserve System --
+  xrpl_reserve_system:
+    name: "Optima XRPL System"
+    components:
+      - name: "XRPL Node Infrastructure"
+        description: "Fleet of full-history and validating XRPL nodes"
+        purpose: "Independent verifiable ledger view, deterministic data feeds"
+      - name: "Reserve Registry"
+        description: "Internal classification of all collateral assets"
+        categories:
+          - type: "CASH"
+            description: "Cash and bank deposits"
+          - type: "FIAT_BALANCE"
+            description: "Fiat currency balances"
+          - type: "CREDIT_MTN"
+            description: "Medium term notes (including TC Advantage tranche)"
+            haircut: "70-90%"
+            capacity: "10-30%"
+          - type: "GOLD/HARD ASSET"
+            description: "Physical commodities and hard assets"
+          - type: "RWA_POOL"
+            description: "Real-world asset pools"
+      - name: "Oracle Integration"
+        description: "Chainlink institutional oracles"
+        purpose: "On-chain attestations of aggregate reserve values"
+        features:
+          - "Cryptographically signed data feeds"
+          - "Tamper-evident reconciliation"
+          - "Off-chain to on-chain data bridge"
+      - name: "Proof-of-Reserves (PoR)"
+        description: "Transparent auditable reserve verification"
+        features:
+          - "Bank statement reconciliation"
+          - "STC report reconciliation"
+          - "Audit trail via IPFS CIDs"
+          - "Third-party verifiable"
+
+    ltv_controls:
+      haircut_range: "70-90%"
+      capacity_recognition: "10-30%"
+      concentration_limits: true
+      daily_mark_to_market: true
+      automated_sufficiency_alerts: true
+      no_rehypothecation: true
+
+  # -- Eligible Funding Structures --
+  eligible_facilities:
+    - type: "Secured revolving facility"
+      collateral: "Pledged tranche"
+    - type: "Term facility"
+      collateral: "Pledged tranche"
+    - type: "Repo / reverse-repo"
+      collateral: "Pledged tranche"
+    - type: "Warehouse credit line"
+      collateral: "Pledged tranche"
+    - type: "Structured note"
+      collateral: "Pledged tranche"
+    - type: "Internal IOU / credit issuance"
+      collateral: "Pledged tranche"
+      notes: "Subject to applicable securities law"
+
+  # -- Risk Controls --
+  risk_controls:
+    credit_risk:
+      - "Conservative underwriting"
+      - "Third-party valuations"
+      - "Borrowing base monitoring"
+      - "Stress testing"
+      - "Exposure limits"
+    liquidity_risk:
+      - "Bank-controlled liquidity pools"
+      - "Escrow-based settlement"
+      - "No rehypothecation"
+      - "Real-time cash visibility"
+    market_risk:
+      - "No speculative trading"
+      - "No leveraged token positions"
+      - "No custody of volatile assets"
+      - "Blockchain used only for evidence, not exposure"
+    operational_risk:
+      - "Dual-control approvals"
+      - "Segregation of duties"
+      - "Independent audit trails"
+      - "Quarterly compliance reviews"
+      - "Redundant infrastructure"
+      - "Disaster recovery plan"

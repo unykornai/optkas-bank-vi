@@ -1,0 +1,125 @@
+# ============================================================
+# JURISDICTION RULES — VIETNAM
+# ============================================================
+
+jurisdiction: "VN"
+name: "Socialist Republic of Vietnam"
+legal_system: "civil_law"
+currency: "VND"
+primary_regulators:
+  - "State Bank of Vietnam (SBV)"
+  - "State Securities Commission (SSC)"
+  - "Ministry of Finance (MOF)"
+  - "Ministry of Planning and Investment (MPI)"
+  - "Vietnam Anti-Money Laundering Authority"
+
+# --- Required Clauses (Always) ---
+required_clauses:
+  - governing_law
+  - arbitration_clause
+  - enterprise_registration_number
+  - aml_representation
+  - sbv_or_ssc_license_reference
+  - foreign_exchange_compliance
+  - representations
+  - signatory_block
+
+# --- AML / Sanctions ---
+aml_requirements:
+  statutes:
+    - name: "Law on Anti-Money Laundering"
+      citation: "Law No. 14/2022/QH15"
+    - name: "Decree on AML Implementation"
+      citation: "Decree No. 19/2023/ND-CP"
+  require_beneficial_ownership_declaration: true
+  require_sanctions_screening: true
+  require_pep_screening: true
+
+# --- Entity Registration ---
+entity_requirements:
+  require_enterprise_registration_certificate: true
+  require_investment_registration_certificate: true  # for foreign-invested entities
+  require_tax_registration: true
+  issuing_authority: "Department of Planning and Investment"
+
+# --- If Foreign Investment ---
+if_foreign_investment:
+  require:
+    - investment_registration_certificate
+    - foreign_exchange_account_approval
+    - sbv_capital_account_registration
+    - offshore_loan_registration  # if debt instrument
+  foreign_ownership_cap:
+    general: 49  # percent
+    banking: 30
+    telecoms: 49
+    media: 0
+    note: "Caps vary by sector; check specific regulations"
+  capital_account:
+    require_direct_investment_capital_account: true
+    require_indirect_investment_securities_account: true
+
+# --- If Securities ---
+if_security_offering:
+  require:
+    - ssc_license_reference
+    - public_offering_registration  # if public
+    - private_placement_exemption  # if private
+    - transfer_restrictions
+  private_placement:
+    max_investors: 100
+    lock_up_period_years: 1
+    professional_investor_requirement: true
+
+# --- If Cross-Border ---
+if_cross_border:
+  require:
+    - source_of_funds_declaration
+    - foreign_exchange_compliance
+    - sbv_approval_for_large_transactions
+    - anti_bribery_compliance
+    - tax_withholding_clause
+  foreign_exchange:
+    reference: "Ordinance on Foreign Exchange Control"
+    require_fx_license: true
+    require_capital_account_registration: true
+    transaction_reporting_threshold_usd: 5000
+  anti_bribery:
+    statute: "Vietnam Penal Code Article 364"
+    anti_corruption_law: "Law on Anti-Corruption 2018"
+
+# --- If Entity is Bank ---
+if_bank:
+  require_license_from:
+    - "State Bank of Vietnam"
+  require_minimum_charter_capital: true
+  minimum_charter_capital_vnd: 3000000000000  # VND 3 trillion
+
+# --- If Entity Claims Custody ---
+if_custody:
+  require:
+    - ssc_license_for_custody
+    - custodian_insurance
+    - segregation_of_assets_clause
+  warning_if_no_license: "⚠️ No SSC custody license provided — cannot validate custody authority"
+
+# --- Governing Law ---
+governing_law:
+  default: "Laws of Vietnam"
+  alternative_for_cross_border: "Laws of Singapore"
+  note: "Vietnamese courts may not enforce foreign arbitral awards without proper filing"
+
+# --- Dispute Resolution ---
+dispute_resolution:
+  preferred: "arbitration"
+  domestic_arbitration_body: "Vietnam International Arbitration Centre (VIAC)"
+  international_arbitration_body: "Singapore International Arbitration Centre (SIAC)"
+  court_alternative: "People's Court of Ho Chi Minh City"
+  new_york_convention_member: true
+
+# --- Signatory Requirements ---
+signatory_requirements:
+  require_legal_representative: true
+  require_company_seal: true
+  require_notarization: false
+  require_legalization_for_foreign_docs: true

@@ -1,0 +1,191 @@
+# Clause Registry
+# ================
+# Versioned module registry for clause drift prevention.
+# Every contract module must be registered here with:
+#   - version: Semantic version of the clause
+#   - last_reviewed_by: Name/role of the last reviewer
+#   - last_reviewed_date: Date of last review
+#   - jurisdiction_validated: List of jurisdictions this clause is validated for
+#   - risk_level: LOW, MEDIUM, HIGH, CRITICAL
+#   - status: ACTIVE, DRAFT, DEPRECATED, UNDER_REVIEW
+#   - checksum: SHA256 of the module file at time of last review
+#
+# The assembler MUST check this registry before including any module.
+# Unregistered or DEPRECATED modules are blocked.
+
+registry_version: "1.0.0"
+last_updated: "2026-02-12"
+review_policy: "All modules must be reviewed quarterly. HIGH/CRITICAL risk modules monthly."
+
+modules:
+
+  recitals:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "LOW"
+    status: "ACTIVE"
+    description: "Opening recitals establishing parties and purpose"
+
+  definitions:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "LOW"
+    status: "ACTIVE"
+    description: "Defined terms and interpretive provisions"
+
+  representations:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "HIGH"
+    status: "ACTIVE"
+    description: "Representations and warranties — liability-bearing clause"
+
+  covenants:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "HIGH"
+    status: "ACTIVE"
+    description: "Affirmative and negative covenants"
+
+  aml_clause:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "CRITICAL"
+    status: "ACTIVE"
+    description: "Anti-money laundering compliance — regulatory obligation"
+
+  sanctions_compliance:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "CRITICAL"
+    status: "ACTIVE"
+    description: "OFAC/SDN/UN/EU sanctions screening and compliance"
+
+  indemnification:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "HIGH"
+    status: "ACTIVE"
+    description: "Indemnification obligations and procedures"
+
+  limitation_of_liability:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "HIGH"
+    status: "ACTIVE"
+    description: "Limitation and exclusion of liability"
+
+  governing_law:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "CRITICAL"
+    status: "ACTIVE"
+    description: "Governing law and submission to jurisdiction"
+
+  security_interest:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "GB", "SG"]
+    risk_level: "CRITICAL"
+    status: "ACTIVE"
+    description: "Security interest grant, perfection, and enforcement"
+
+  arbitration_clause:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "HIGH"
+    status: "ACTIVE"
+    description: "Arbitration agreement with seat and rules specification"
+
+  escrow_conditions:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "HIGH"
+    status: "ACTIVE"
+    description: "Escrow deposit, release conditions, and agent responsibilities"
+
+  signatory_block:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "MEDIUM"
+    status: "ACTIVE"
+    description: "Signature blocks with authority verification"
+
+  transfer_restrictions:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "GB", "SG", "KY"]
+    risk_level: "CRITICAL"
+    status: "ACTIVE"
+    description: "Securities transfer restrictions — Reg D/144A/Reg S"
+
+  accredited_investor:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "SG"]
+    risk_level: "HIGH"
+    status: "ACTIVE"
+    description: "Accredited/qualified investor representations"
+
+  source_of_funds:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "HIGH"
+    status: "ACTIVE"
+    description: "Source of funds declaration and anti-corruption"
+
+  currency_controls:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["VN", "CH"]
+    risk_level: "HIGH"
+    status: "ACTIVE"
+    description: "Foreign exchange and currency control compliance"
+
+  conditions_precedent:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "MEDIUM"
+    status: "ACTIVE"
+    description: "Conditions precedent to closing"
+
+  closing_mechanics:
+    version: "1.0.0"
+    last_reviewed_by: "Legal Automation OS — Initial Build"
+    last_reviewed_date: "2026-02-12"
+    jurisdiction_validated: ["US", "VN", "CH", "GB", "SG", "KY"]
+    risk_level: "MEDIUM"
+    status: "ACTIVE"
+    description: "Closing procedures, deliverables, and mechanics"

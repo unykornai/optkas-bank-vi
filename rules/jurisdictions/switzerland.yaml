@@ -1,0 +1,101 @@
+# ============================================================
+# JURISDICTION RULES — SWITZERLAND
+# ============================================================
+
+jurisdiction: "CH"
+name: "Swiss Confederation"
+legal_system: "civil_law"
+currency: "CHF"
+primary_regulators:
+  - "Swiss Financial Market Supervisory Authority (FINMA)"
+  - "Swiss National Bank (SNB)"
+  - "Swiss Financial Intelligence Unit (MROS)"
+  - "Self-Regulatory Organizations (SROs)"
+
+required_clauses:
+  - governing_law
+  - arbitration_clause
+  - aml_representation
+  - beneficial_owner_declaration
+  - anti_money_laundering_reference
+  - representations
+  - signatory_block
+
+aml_requirements:
+  statutes:
+    - name: "Anti-Money Laundering Act (AMLA)"
+      citation: "SR 955.0"
+    - name: "Anti-Money Laundering Ordinance (AMLO)"
+      citation: "SR 955.01"
+    - name: "FINMA Anti-Money Laundering Ordinance"
+      citation: "SR 955.033.0"
+  require_beneficial_ownership_declaration: true
+  require_form_a: true  # Declaration of Beneficial Owner
+  require_form_r: false  # only for certain structures
+  require_sanctions_screening: true
+  require_pep_screening: true
+
+if_financial_intermediary:
+  require:
+    - finma_license_or_sro_membership
+    - due_diligence_obligations
+    - transaction_monitoring
+    - suspicious_activity_reporting
+  finma_license_categories:
+    - banking_license
+    - securities_dealer_license
+    - fund_management_license
+    - insurance_license
+    - fintech_license
+
+if_security_offering:
+  require:
+    - finma_approval_if_public
+    - prospectus_if_public
+    - transfer_restrictions
+    - qualified_investor_exemption
+  collective_investment_schemes:
+    reference: "Collective Investment Schemes Act (CISA)"
+    citation: "SR 951.31"
+    require_fund_license: true
+
+if_cross_border:
+  require:
+    - source_of_funds_declaration
+    - anti_bribery_compliance
+    - tax_information_exchange
+    - withholding_tax_clause
+  automatic_exchange_of_information: true
+  crs_compliant: true
+  withholding_tax:
+    dividend_rate: 35
+    interest_rate: 35
+    treaty_override: true
+
+if_bank:
+  require_license_from:
+    - "FINMA"
+  require_minimum_capital: true
+  minimum_capital_chf: 10000000
+  deposit_protection:
+    scheme: "esisuisse"
+    coverage_chf: 100000
+
+governing_law:
+  default: "Laws of Switzerland"
+  preferred_canton: "Zurich"
+  alternative_cantons:
+    - "Geneva"
+    - "Zug"
+
+dispute_resolution:
+  preferred: "arbitration"
+  arbitration_body: "Swiss Arbitration Centre"
+  court_alternative: "Commercial Court of Zurich"
+  swiss_rules_of_international_arbitration: true
+
+signatory_requirements:
+  require_commercial_register_excerpt: true
+  require_board_resolution: true
+  require_notarization: false
+  require_apostille_for_foreign_docs: true

@@ -1,0 +1,60 @@
+# Evidence Manifest
+# =================
+# Maps entity evidence directories to expected supporting documents.
+# The evidence validator checks that claimed licenses, registrations,
+# and authorizations are backed by actual uploaded files.
+#
+# Each entity slug maps to a list of required evidence categories.
+# Files are SHA256-hashed and logged in the audit trail.
+
+evidence_requirements:
+  # Categories of evidence that must be present for institutional transactions
+  registration:
+    description: "Certificate of incorporation / formation / enterprise registration"
+    required_for: ["all"]
+    accepted_formats: [".pdf", ".jpg", ".png", ".tif"]
+
+  regulatory_license:
+    description: "Current regulatory license from relevant authority"
+    required_for: ["regulated_entities"]
+    accepted_formats: [".pdf"]
+
+  custodian_letter:
+    description: "Custodian confirmation letter or custody agreement"
+    required_for: ["entities_claiming_custodian"]
+    accepted_formats: [".pdf"]
+
+  settlement_bank_letter:
+    description: "Bank reference or settlement account confirmation"
+    required_for: ["entities_with_banking"]
+    accepted_formats: [".pdf"]
+
+  board_resolution:
+    description: "Board resolution authorizing transaction and signatories"
+    required_for: ["all"]
+    accepted_formats: [".pdf"]
+
+  signatory_authorization:
+    description: "Power of attorney or authorization document for signatory"
+    required_for: ["all"]
+    accepted_formats: [".pdf"]
+
+  beneficial_ownership_declaration:
+    description: "Beneficial ownership declaration / UBO register extract"
+    required_for: ["cross_border", "aml_jurisdictions"]
+    accepted_formats: [".pdf"]
+
+  sanctions_screening_report:
+    description: "OFAC/SDN/UN/EU sanctions screening results"
+    required_for: ["cross_border", "aml_jurisdictions"]
+    accepted_formats: [".pdf", ".csv"]
+
+  operating_agreement:
+    description: "Operating agreement, articles of association, or bylaws"
+    required_for: ["all"]
+    accepted_formats: [".pdf"]
+
+  source_of_funds:
+    description: "Source of funds declaration / bank statement"
+    required_for: ["cross_border", "large_transactions"]
+    accepted_formats: [".pdf"]

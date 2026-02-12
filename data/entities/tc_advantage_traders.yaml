@@ -1,0 +1,221 @@
+entity:
+  legal_name: "TC Advantage Traders, Ltd."
+  trade_name: "TC Advantage Traders"
+  jurisdiction: "BS"
+  formation_date: null
+  entity_type: "limited_company"
+  registration_number: null
+  ein: null
+  lei: null
+
+  regulatory_status:
+    status: "operational"
+    swift_eligible: false
+    uses_partner_bank_for_swift: true
+    domicile: "Bahamas"
+    securities_exemptions:
+      - "Regulation S"
+      - "Rule 144A"
+    notes:
+      - "Bahamas-incorporated limited company"
+      - "Issuer of 5% Secured Medium Term Notes"
+      - "Not a bank — uses escrow agent and transfer agent for settlement"
+      - "Securities offered under Reg S and 144A exemptions"
+
+  licenses: []
+
+  directors:
+    - name: "Larry Corona"
+      title: "Chairman of Board of Directors"
+      nationality: null
+      residence: "US"
+
+  signatories:
+    - name: "Larry Corona"
+      title: "Chairman of Board of Directors"
+      authority: "full"
+
+  beneficial_owners: []
+
+  registered_address:
+    street: "7A West Drive, 2nd Floor, Nervee Building"
+    city: "Freeport"
+    state: "Grand Bahama"
+    country: "BS"
+    postal_code: null
+    notes: "Commonwealth of the Bahamas"
+
+  banking:
+    custodian: null
+    settlement_bank: null
+    swift_code: null
+    aba_routing: null
+    account_number: null
+    ultimate_beneficiary_name: "TC Advantage Traders, Ltd."
+    notes:
+      - "Settlement via DTC/DWAC FAST system"
+      - "Transfer agent, escrow agent, and paying agent: Securities Transfer Corporation (STC)"
+
+  address:
+    street: "7A West Drive, 2nd Floor, Nervee Building"
+    city: "Freeport"
+    state: "Grand Bahama"
+    country: "BS"
+    notes: "Commonwealth of the Bahamas"
+
+  # -- Medium Term Note Program --
+  mtn_program:
+    program_name: "TC Advantage Traders 5% Secured Medium Term Notes"
+    max_offering: 5000000000
+    currency: "USD"
+    coupon_rate: 5.0
+    maturity_date: "2030-05-31"
+    dated: "2020-05-29"
+    note_type: "secured_medium_term"
+    min_denomination: 10000000
+    max_notes: 500
+    settlement_method: "DTC/DWAC FAST"
+
+    cusips:
+      - id: "87225HAA6"
+        type: "144A"
+        description: "5% Secured Medium Term Notes 144A"
+        series: "ST409-BD1"
+        authorized_par: 200000000000
+        outstanding: 200000000000
+
+      - id: "87225HAB4"
+        type: "144A"
+        description: "5% Secured Medium Term Notes 144A"
+        series: "ST409-BD3"
+        isin: "US87225HAB42"
+        authorized_par: 1000000000
+        issued: 500000000
+        outstanding: 500000000
+
+      - id: "P9000TAA8"
+        type: "Reg S"
+        description: "5% Secured Medium Term Notes REG S"
+        series: "ST409-BD4"
+        isin: "BSP9000TAA83"
+        authorized_par: 4000000000
+        unissued: true
+
+      - id: "P9000TAB6"
+        type: "Reg S"
+        description: "5% Secured Medium Term Notes REG S"
+        series: "ST409-BD2"
+        authorized_par: 200000000000
+        unissued: true
+
+      - id: "P9000TAD2"
+        type: "Reg S"
+        description: "5% Secured Medium Term Notes Series C"
+        series: "ST409-BD5"
+        authorized_par: 500000000
+        unissued: true
+
+    stc_summary:
+      total_authorized: 406500000000
+      total_outstanding: 0
+      total_active_shareholders: 2
+      as_of: "2026-01-23"
+      source: "Securities Transfer Corporation position report"
+
+    transfer_agent:
+      name: "Securities Transfer Corporation"
+      address: "2901 Dallas Parkway Suite 380, Plano TX 75093"
+      roles:
+        - "Transfer Agent"
+        - "Escrow Agent"
+        - "Paying Agent"
+
+  # -- Insurance Coverage --
+  insurance:
+    broker:
+      name: "C. J. Coleman & Company Limited"
+      trading_as: "CJ Coleman"
+      registration_country: "GB"
+      registration_number: "01135419"
+      fca_number: 30820
+      lloyds_number: "COL/879"
+      address: "Portsoken House, 155 Minories, London, EC3N 1BT"
+      regulated_by:
+        - "Financial Conduct Authority (FCA)"
+        - "Lloyd's of London"
+    coverage:
+      type: "Financial Offering Insurance"
+      sum_insured: 625000000
+      currency: "USD"
+      market: "Lloyd's of London and Company markets"
+      confirmation_date: "2024-03-06"
+      confirmed_by: "John Collier, Divisional Director, Financial Institutions"
+
+  # -- Legal Opinions --
+  legal_opinions:
+    - title: "K. Knowles & Co. Opinion Letter"
+      counsel: "K. Knowles & Co."
+      attorney: "Kendal Knowles"
+      jurisdiction: "BS"
+      location: "Freeport, Grand Bahama, Bahamas"
+      type: "International Counsel"
+      date: "2026-01-13"
+      scope:
+        - "Validity of TC Advantage 5% Secured MTN program"
+        - "SPV ownership and tranche status"
+        - "Collateral use and pledgeability"
+        - "OPTKAS1 XRPL Reserve & Oracle System integration"
+      key_opinions:
+        - "Program authorizes up to USD 5B of secured MTNs"
+        - "Tranche validly issued and outstanding"
+        - "SPV acquires valid title upon subscription"
+        - "Security Agreement grants valid security interest"
+        - "First-priority perfected interest upon UCC filing"
+        - "Tranche eligible as collateral for secured facilities"
+        - "XRPL Reserve system legally consistent with compliant collateral framework"
+      haircut_guidance: "70-90% haircut (10-30% capacity recognition) for CREDIT_MTN"
+      eligible_facilities:
+        - "Secured revolving or term facilities"
+        - "Repo or reverse-repo transactions"
+        - "Warehouse credit lines"
+        - "Structured note or bilateral funding"
+        - "Internal stablecoin/IOU/credit issuances"
+
+    - title: "US Counsel Opinion Letter (Draft)"
+      counsel: "The Pro Se Legal Studies Institute Inc"
+      attorney: "Timothy Williams"
+      jurisdiction: "US"
+      type: "U.S. Counsel"
+      date: "2026-01-13"
+      scope:
+        - "U.S. law opinion on same matters"
+        - "Limited to State of [Texas] and federal law"
+      status: "DRAFT"
+      notes:
+        - "Substantively mirrors K. Knowles opinion"
+        - "Draft status — awaiting finalization"
+
+  # -- Collateral Framework --
+  collateral_framework:
+    spv: "OPTKAS1-MAIN"
+    spv_jurisdiction: "US-WY"
+    spv_type: "special_purpose_vehicle"
+    reserve_system: "Optima XRPL System"
+    blockchain_layers:
+      - "XRPL"
+    oracle_integration: "Chainlink"
+    reserve_categories:
+      - "CASH"
+      - "FIAT_BALANCE"
+      - "CREDIT_MTN"
+      - "GOLD/HARD ASSET"
+      - "RWA_POOL"
+    proof_of_reserves: true
+    ltv_haircut_range: "70-90%"
+    capacity_recognition: "10-30%"
+    perfection_method: "UCC filing + custodial control"
+    notes:
+      - "Non-custodial architecture"
+      - "On-chain representations for internal accounting only"
+      - "Not marketed as participations in the Notes"
+      - "IPFS CID references for documentary evidence"

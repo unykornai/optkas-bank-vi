@@ -1,0 +1,106 @@
+# ============================================================
+# SAMPLE ENTITY — US Corporation
+# ============================================================
+# Conforms to: data/entities/_schema.yaml v1.0
+# ============================================================
+
+entity:
+  legal_name: "Meridian Capital Holdings, Inc."
+  trade_name: "Meridian Capital"
+  jurisdiction: "US-DE"
+  formation_date: "2018-03-15"
+  entity_type: corporation
+  registration_number: "7234891"
+  ein: "83-2947561"
+  lei: "5493001KJTIIGC8Y1R12"
+
+  regulatory_status:
+    is_bank: false
+    is_broker_dealer: true
+    is_ria: true
+    is_fund: false
+    is_insurance_company: false
+    is_money_services_business: false
+    is_government_entity: false
+    is_non_profit: false
+
+  licenses:
+    - license_type: "broker_dealer"
+      regulator: "FINRA"
+      license_number: "BD-284719"
+      issue_date: "2018-06-01"
+      expiration: "2026-06-01"
+      status: active
+
+    - license_type: "investment_adviser"
+      regulator: "SEC"
+      license_number: "801-112847"
+      issue_date: "2018-09-15"
+      expiration: "2027-09-15"
+      status: active
+
+  directors:
+    - name: "James R. Whitfield"
+      title: "Chairman & CEO"
+      authority_scope: full
+      nationality: "US"
+      pep_status: false
+
+    - name: "Sarah M. Chen"
+      title: "Chief Compliance Officer"
+      authority_scope: limited
+      nationality: "US"
+      pep_status: false
+
+    - name: "David K. Okonkwo"
+      title: "General Counsel"
+      authority_scope: limited
+      nationality: "US"
+      pep_status: false
+
+  signatories:
+    - name: "James R. Whitfield"
+      title: "Chairman & CEO"
+      can_bind_company: true
+      can_move_funds: true
+      can_pledge_assets: true
+      authorization_document: "Board Resolution dated 2024-01-15"
+      signature_authority_limit: 50000000
+
+    - name: "Sarah M. Chen"
+      title: "Chief Compliance Officer"
+      can_bind_company: false
+      can_move_funds: true
+      can_pledge_assets: false
+      authorization_document: "Board Resolution dated 2024-01-15"
+      signature_authority_limit: 5000000
+
+  banking:
+    custodian: "JPMorgan Chase Bank, N.A."
+    account_type: custody
+    settlement_bank: "JPMorgan Chase Bank, N.A."
+    swift_code: "CHASUS33"
+    escrow_required: false
+    correspondent_bank: null
+
+  beneficial_owners:
+    - name: "James R. Whitfield"
+      ownership_percentage: 45
+      nationality: "US"
+      pep_status: false
+      sanctions_screened: true
+      screening_date: "2025-11-01"
+
+    - name: "Whitfield Family Trust"
+      ownership_percentage: 30
+      nationality: "US"
+      pep_status: false
+      sanctions_screened: true
+      screening_date: "2025-11-01"
+
+  registered_address:
+    street: "1209 Orange Street"
+    city: "Wilmington"
+    state_province: "Delaware"
+    postal_code: "19801"
+    country: "US"

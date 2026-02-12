@@ -1,0 +1,284 @@
+# ============================================================
+# ENTITY SCHEMA DEFINITION
+# ============================================================
+# All entity YAML files MUST conform to this schema.
+# The compliance validator enforces this structure.
+# Free-form fields are NOT permitted.
+# ============================================================
+
+schema_version: "1.0"
+
+required_fields:
+  - legal_name
+  - jurisdiction
+  - formation_date
+  - entity_type
+
+entity:
+  # --- Core Identity ---
+  legal_name:
+    type: string
+    required: true
+    description: "Full legal name as registered"
+
+  trade_name:
+    type: string
+    required: false
+    description: "DBA or trade name if different"
+
+  jurisdiction:
+    type: string
+    required: true
+    description: "ISO 3166-1 alpha-2 country code or US state code"
+    enum_ref: "rules/jurisdictions/_master.yaml"
+
+  formation_date:
+    type: date
+    required: true
+    format: "YYYY-MM-DD"
+
+  entity_type:
+    type: string
+    required: true
+    enum:
+      - corporation
+      - llc
+      - limited_partnership
+      - general_partnership
+      - trust
+      - fund
+      - special_purpose_vehicle
+      - branch_office
+      - sole_proprietorship
+      - cooperative
+      - joint_venture
+
+  registration_number:
+    type: string
+    required: true
+    description: "Official registration/incorporation number"
+
+  ein:
+    type: string
+    required: false
+    description: "US Employer Identification Number (if US entity)"
+    pattern: "^\\d{2}-\\d{7}$"
+
+  lei:
+    type: string
+    required: false
+    description: "Legal Entity Identifier (20-char alphanumeric)"
+    pattern: "^[A-Z0-9]{20}$"
+
+  # --- Regulatory Status ---
+  regulatory_status:
+    type: object
+    required: true
+    fields:
+      is_bank:
+        type: boolean
+        required: true
+        default: false
+      is_broker_dealer:
+        type: boolean
+        required: true
+        default: false
+      is_ria:
+        type: boolean
+        required: true
+        default: false
+      is_fund:
+        type: boolean
+        required: true
+        default: false
+      is_insurance_company:
+        type: boolean
+        required: true
+        default: false
+      is_money_services_business:
+        type: boolean
+        required: true
+        default: false
+      is_government_entity:
+        type: boolean
+        required: true
+        default: false
+      is_non_profit:
+        type: boolean
+        required: true
+        default: false
+
+  # --- Licenses ---
+  licenses:
+    type: list
+    required: false
+    item_schema:
+      license_type:
+        type: string
+        required: true
+        description: "Type of license (e.g., banking_license, broker_dealer, ria, fund_manager)"
+      regulator:
+        type: string
+        required: true
+        description: "Issuing regulatory body"
+      license_number:
+        type: string
+        required: true
+        description: "Official license/registration number"
+      issue_date:
+        type: date
+        required: false
+        format: "YYYY-MM-DD"
+      expiration:
+        type: date
+        required: true
+        format: "YYYY-MM-DD"
+      status:
+        type: string
+        required: true
+        enum:
+          - active
+          - pending
+          - suspended
+          - revoked
+          - expired
+
+  # --- Directors / Officers ---
+  directors:
+    type: list
+    required: true
+    min_items: 1
+    item_schema:
+      name:
+        type: string
+        required: true
+      title:
+        type: string
+        required: true
+        description: "e.g., Director, CEO, Managing Member, General Partner"
+      authority_scope:
+        type: string
+        required: true
+        enum:
+          - full
+          - limited
+          - advisory
+      nationality:
+        type: string
+        required: false
+      pep_status:
+        type: boolean
+        required: true
+        default: false
+        description: "Politically Exposed Person status"
+
+  # --- Signatories ---
+  signatories:
+    type: list
+    required: true
+    min_items: 1
+    item_schema:
+      name:
+        type: string
+        required: true
+      title:
+        type: string
+        required: true
+      can_bind_company:
+        type: boolean
+        required: true
+      can_move_funds:
+        type: boolean
+        required: true
+      can_pledge_assets:
+        type: boolean
+        required: true
+      authorization_document:
+        type: string
+        required: false
+        description: "Reference to board resolution or power of attorney"
+      signature_authority_limit:
+        type: number
+        required: false
+        description: "Maximum USD equivalent this signatory can commit"
+
+  # --- Banking Information ---
+  banking:
+    type: object
+    required: false
+    fields:
+      custodian:
+        type: string
+        required: false
+      account_type:
+        type: string
+        required: false
+        enum:
+          - operating
+          - escrow
+          - trust
+          - custody
+          - settlement
+      settlement_bank:
+        type: string
+        required: false
+      swift_code:
+        type: string
+        required: false
+        pattern: "^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$"
+      escrow_required:
+        type: boolean
+        required: false
+        default: false
+      correspondent_bank:
+        type: string
+        required: false
+
+  # --- Beneficial Ownership ---
+  beneficial_owners:
+    type: list
+    required: false
+    item_schema:
+      name:
+        type: string
+        required: true
+      ownership_percentage:
+        type: number
+        required: true
+        min: 0
+        max: 100
+      nationality:
+        type: string
+        required: true
+      pep_status:
+        type: boolean
+        required: true
+        default: false
+      sanctions_screened:
+        type: boolean
+        required: true
+        default: false
+      screening_date:
+        type: date
+        required: false
+
+  # --- Address ---
+  registered_address:
+    type: object
+    required: true
+    fields:
+      street:
+        type: string
+        required: true
+      city:
+        type: string
+        required: true
+      state_province:
+        type: string
+        required: false
+      postal_code:
+        type: string
+        required: true
+      country:
+        type: string
+        required: true

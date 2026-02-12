@@ -1,0 +1,171 @@
+entity:
+  legal_name: "Cuerpo Markets"
+  trade_name: "Cuerpo Markets"
+  jurisdiction: "US"
+  formation_date: null
+  entity_type: "sovereign_platform"
+  registration_number: null
+  ein: null
+  lei: null
+
+  regulatory_status:
+    status: "operational"
+    swift_eligible: false
+    uses_partner_bank_for_swift: true
+    notes:
+      - "Cuerpo Markets is a sovereign-grade digital capital markets engine"
+      - "Not a bank — operates through bank JV partner for settlement/escrow"
+      - "Technology and infrastructure provider"
+      - "Regulatory compliance inherited from JV bank partner"
+
+  licenses: []
+
+  directors:
+    - name: "Cuerpo Markets Principal"
+      title: "Managing Director"
+      nationality: null
+      residence: "US"
+  signatories:
+    - name: "Cuerpo Markets Principal"
+      title: "Managing Director"
+      authority: "full"
+  beneficial_owners: []
+
+  registered_address:
+    street: null
+    city: null
+    state: null
+    country: "US"
+    postal_code: null
+    notes: "Address to be confirmed upon JV formalization"
+
+  banking:
+    custodian: "STC (Securities Transfer Corporation)"
+    settlement_bank: null
+    swift_code: null
+    aba_routing: null
+    account_number: null
+    ultimate_beneficiary_name: "Cuerpo Markets"
+    custodial_value: 200000000000
+    custodial_currency: "USD"
+    notes:
+      - "200B in custodial at STC (Securities Transfer Corporation)"
+      - "Banking rails provided through JV bank partner"
+      - "Escrow-based settlement"
+      - "No rehypothecation"
+
+  # -- JV Structure --
+  jv_structure:
+    partner: "[Bank Name — TBD]"
+    ownership_split: "JV agreement terms"
+    jv_type: "sovereign_digital_capital_markets"
+
+    cuerpo_contributions:
+      - "$5B bond-backed lending program"
+      - "Full allocation over 200B in custodial at STC"
+      - "SPV + sovereign trust structure"
+      - "Tokenization, attestation, and issuance engines"
+      - "Reserve Vault + Borrowing Base analytics"
+      - "Automated dashboards for lenders, investors, and operators"
+      - "Multi-chain evidence layer (XRPL + Stellar)"
+      - "Deal flow and asset origination"
+      - "Compliance automation and risk analytics"
+      - "Escrow + settlement workflows"
+      - "Institutional-grade reporting"
+
+    bank_contributions:
+      - "Capital and proof of funds"
+      - "Cash, credit lines, and liquidity"
+      - "Balance sheet strength"
+      - "Banking rails for settlement and escrow"
+      - "Regulatory posture"
+      - "Compliance oversight"
+      - "Enhanced credibility with lenders and counterparties"
+
+    revenue_model:
+      split: "per JV agreement"
+      sources:
+        - "Origination fees"
+        - "Tokenization and registration fees"
+        - "Borrowing base utilization"
+        - "Spread income on funded deals"
+        - "Participation in yields"
+        - "Asset management and servicing fees"
+
+  # -- Bond Program --
+  bond_program:
+    size: 5000000000
+    currency: "USD"
+    custodial_backing: 200000000000
+    custodian: "STC"
+    structure: "bond-backed lending"
+    securities_compliance:
+      - "SEC 144A standards"
+      - "Reg D exemptions"
+      - "Reg S international placement rules"
+    instruments:
+      - "CUSIPs"
+      - "ISINs"
+      - "Transfer agent"
+      - "Insurance"
+      - "Collateral schedules"
+
+  # -- Asset Classes Originated --
+  asset_classes:
+    - "Real estate"
+    - "Notes"
+    - "Receivables"
+    - "Commodities"
+    - "Portfolios"
+
+  # -- Technology Stack --
+  technology:
+    blockchain_layer:
+      - "XRPL"
+      - "Stellar"
+    purpose: "evidence_only"
+    notes:
+      - "Non-custodial architecture"
+      - "No consumer deposits"
+      - "No speculative token exposure"
+      - "Blockchain used only for evidence, not exposure"
+    security:
+      - "Bank-grade encryption"
+      - "Multi-factor authentication"
+      - "Role-based access controls"
+      - "Penetration testing"
+      - "Continuous monitoring"
+    data_protection:
+      - "Zero-knowledge proofs for sensitive data"
+      - "Encrypted storage"
+      - "SOC-2 aligned operational controls"
+      - "GDPR-aligned data handling"
+
+  # -- Governance Framework --
+  governance:
+    structure: "dual_signature"
+    committees:
+      - name: "Risk Committee"
+        scope: "credit_risk, market_risk, liquidity_risk"
+      - name: "Compliance Committee"
+        scope: "kyc_aml, sanctions, regulatory_reporting"
+      - name: "Audit & Controls Committee"
+        scope: "internal_audit, independent_audit, exception_reporting"
+      - name: "Technology & Security Committee"
+        scope: "cybersecurity, data_protection, infrastructure"
+    controls:
+      - "Dual-control approvals"
+      - "Segregation of duties"
+      - "Independent audit trails"
+      - "Quarterly compliance reviews"
+    reporting:
+      - "Monthly compliance reports"
+      - "Quarterly risk audits"
+      - "On-chain verification logs"
+      - "Asset-level audit trails"
+      - "Borrowing base certificates"
+      - "Collateral sufficiency reports"
+
+  address:
+    country: "US"
+    notes: "Sovereign platform — jurisdiction determined by JV bank partner location"

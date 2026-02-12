@@ -1,0 +1,376 @@
+{
+  "US": {
+    "jurisdiction_code": "US",
+    "jurisdiction_name": "United States of America",
+    "region": "AMERICAS",
+    "legal_system": "common_law",
+    "fatf_status": "MEMBER",
+    "deal_count": 42,
+    "swift_rules": {
+      "eligible": [
+        "bank",
+        "payment_institution",
+        "securities_depository"
+      ],
+      "ineligible": [
+        "broker_dealer",
+        "ria",
+        "fund",
+        "custodian",
+        "securities_house",
+        "family_office"
+      ],
+      "notes": [
+        "Non-bank financial entities use banking partners for SWIFT",
+        "Broker-dealers (e.g., Pershing) clear through banks on SWIFT"
+      ]
+    },
+    "license_capabilities": [
+      {
+        "license_type": "broker_dealer",
+        "regulator": "FINRA/SEC",
+        "capabilities": [
+          "trade execution",
+          "client custody",
+          "clearing"
+        ],
+        "restrictions": [
+          "Cannot accept deposits",
+          "Cannot issue loans directly"
+        ],
+        "swift_eligible": false,
+        "can_custody": true,
+        "can_issue_instruments": true,
+        "can_settle": false
+      },
+      {
+        "license_type": "investment_adviser",
+        "regulator": "SEC",
+        "capabilities": [
+          "advisory",
+          "discretionary management",
+          "fund management"
+        ],
+        "restrictions": [
+          "Cannot custody directly without separate license"
+        ],
+        "swift_eligible": false,
+        "can_custody": false,
+        "can_issue_instruments": false,
+        "can_settle": false
+      },
+      {
+        "license_type": "national_bank",
+        "regulator": "OCC",
+        "capabilities": [
+          "deposits",
+          "lending",
+          "settlement",
+          "custody",
+          "fx"
+        ],
+        "restrictions": [],
+        "swift_eligible": true,
+        "can_custody": true,
+        "can_issue_instruments": true,
+        "can_settle": true
+      }
+    ],
+    "regulatory_bodies": [
+      {
+        "name": "Securities and Exchange Commission",
+        "abbreviation": "SEC",
+        "oversight_areas": [
+          "securities",
+          "investment_advisers",
+          "funds"
+        ]
+      },
+      {
+        "name": "Financial Industry Regulatory Authority",
+        "abbreviation": "FINRA",
+        "oversight_areas": [
+          "broker_dealers",
+          "market_conduct"
+        ]
+      },
+      {
+        "name": "Office of the Comptroller of the Currency",
+        "abbreviation": "OCC",
+        "oversight_areas": [
+          "national_banks",
+          "thrifts"
+        ]
+      },
+      {
+        "name": "Financial Crimes Enforcement Network",
+        "abbreviation": "FinCEN",
+        "oversight_areas": [
+          "aml",
+          "cft",
+          "bsa_reporting"
+        ]
+      },
+      {
+        "name": "Office of Foreign Assets Control",
+        "abbreviation": "OFAC",
+        "oversight_areas": [
+          "sanctions",
+          "embargoes",
+          "trade_restrictions"
+        ]
+      }
+    ],
+    "banking": {
+      "central_bank": "Federal Reserve System",
+      "currency": "USD",
+      "fx_controls": false,
+      "fx_authority": null,
+      "correspondent_banks": [
+        "JP Morgan",
+        "BNY Mellon",
+        "Citibank",
+        "Bank of America"
+      ],
+      "domestic_swift_banks": [
+        "CHASUS33",
+        "BOFAUS3N",
+        "IRVTUS3N",
+        "CITIUS33"
+      ]
+    },
+    "treaty_memberships": [
+      "New York Convention (1958)",
+      "Hague Convention",
+      "US-VN Bilateral Trade Agreement",
+      "FATCA (reporting framework)"
+    ],
+    "aml_framework": "Bank Secrecy Act / USA PATRIOT Act / FinCEN",
+    "sanctions_exposure": [
+      "OFAC SDN List",
+      "FCPA anti-bribery",
+      "Dodd-Frank (financial instruments)",
+      "FATCA (tax reporting)"
+    ],
+    "learned_notes": [],
+    "last_updated": "2026-02-12T20:09:38.049449+00:00"
+  },
+  "VN": {
+    "jurisdiction_code": "VN",
+    "jurisdiction_name": "Socialist Republic of Vietnam",
+    "region": "APAC",
+    "legal_system": "civil_law",
+    "fatf_status": "MEMBER",
+    "deal_count": 1,
+    "swift_rules": {
+      "eligible": [
+        "bank",
+        "central_bank"
+      ],
+      "ineligible": [
+        "securities_house",
+        "custodian",
+        "fund",
+        "financial_intermediary"
+      ],
+      "notes": [
+        "Vietnamese financial/securities houses use partner banks for SWIFT",
+        "Activity codes 5210ff/6619ff grant custody but NOT SWIFT access",
+        "Standard practice: custodian authorizes, bank executes SWIFT"
+      ]
+    },
+    "license_capabilities": [
+      {
+        "license_type": "custody_depository",
+        "regulator": "Vietnam Ministry of Finance",
+        "capabilities": [
+          "hold private M0",
+          "issue deposit certificates",
+          "issue custody statements",
+          "issue payment authorizations",
+          "issue guarantees",
+          "issue credit instruments",
+          "act as securities custodian"
+        ],
+        "restrictions": [
+          "Cannot operate as correspondent bank",
+          "Cannot send/receive SWIFT messages directly",
+          "Must use banking partner for cross-border settlement"
+        ],
+        "swift_eligible": false,
+        "can_custody": true,
+        "can_issue_instruments": true,
+        "can_settle": false
+      },
+      {
+        "license_type": "financial_intermediation",
+        "regulator": "Vietnam Ministry of Finance",
+        "capabilities": [
+          "intermediation",
+          "brokerage",
+          "advisory"
+        ],
+        "restrictions": [],
+        "swift_eligible": false,
+        "can_custody": false,
+        "can_issue_instruments": false,
+        "can_settle": false
+      }
+    ],
+    "regulatory_bodies": [
+      {
+        "name": "State Bank of Vietnam",
+        "abbreviation": "SBV",
+        "oversight_areas": [
+          "banking",
+          "fx_controls",
+          "monetary_policy",
+          "aml"
+        ]
+      },
+      {
+        "name": "Ministry of Finance",
+        "abbreviation": "MOF",
+        "oversight_areas": [
+          "securities",
+          "insurance",
+          "fiscal_policy"
+        ]
+      },
+      {
+        "name": "State Securities Commission",
+        "abbreviation": "SSC",
+        "oversight_areas": [
+          "securities_markets",
+          "fund_management"
+        ]
+      }
+    ],
+    "banking": {
+      "central_bank": "State Bank of Vietnam (SBV)",
+      "currency": "VND",
+      "fx_controls": true,
+      "fx_authority": "State Bank of Vietnam (SBV)",
+      "correspondent_banks": [
+        "Standard Chartered",
+        "HSBC",
+        "Citibank"
+      ],
+      "domestic_swift_banks": [
+        "BFTVVNVX",
+        "BFTKVNVX",
+        "ICBVVNVX"
+      ]
+    },
+    "treaty_memberships": [
+      "New York Convention (1958) — via VIAC",
+      "ASEAN Framework Agreement",
+      "US-VN Bilateral Trade Agreement",
+      "Vietnam-EU Free Trade Agreement"
+    ],
+    "aml_framework": "Law on Anti-Money Laundering (2022)",
+    "sanctions_exposure": [
+      "SBV currency control compliance",
+      "Tax clearance for profit repatriation",
+      "Capital account registration requirement"
+    ],
+    "learned_notes": [
+      "[2026-02-12] Learned license type 'securities_activities' from Vietnam Ministry of Finance"
+    ],
+    "last_updated": "2026-02-12T20:09:38.049449+00:00"
+  },
+  "CH": {
+    "jurisdiction_code": "CH",
+    "jurisdiction_name": "Swiss Confederation",
+    "region": "EMEA",
+    "legal_system": "civil_law",
+    "fatf_status": "MEMBER",
+    "deal_count": 0,
+    "swift_rules": {
+      "eligible": [
+        "bank",
+        "securities_dealer"
+      ],
+      "ineligible": [],
+      "notes": [
+        "Swiss banking secrecy partially lifted for AML/tax purposes"
+      ]
+    },
+    "license_capabilities": [],
+    "regulatory_bodies": [
+      {
+        "name": "Swiss Financial Market Supervisory Authority",
+        "abbreviation": "FINMA",
+        "oversight_areas": [
+          "banking",
+          "securities",
+          "insurance",
+          "aml"
+        ]
+      }
+    ],
+    "banking": {
+      "central_bank": "Swiss National Bank (SNB)",
+      "currency": "CHF",
+      "fx_controls": false,
+      "fx_authority": null,
+      "correspondent_banks": [],
+      "domestic_swift_banks": []
+    },
+    "treaty_memberships": [
+      "New York Convention (1958)",
+      "Hague Convention",
+      "Swiss-US Tax Information Exchange"
+    ],
+    "aml_framework": "AMLA (Anti-Money Laundering Act) / FINMA",
+    "sanctions_exposure": [],
+    "learned_notes": [],
+    "last_updated": "2026-02-12T20:09:38.049449+00:00"
+  },
+  "IT": {
+    "jurisdiction_code": "IT",
+    "jurisdiction_name": "Italian Republic",
+    "region": "EMEA",
+    "legal_system": "civil_law",
+    "fatf_status": "MEMBER",
+    "deal_count": 0,
+    "swift_rules": {
+      "eligible": [],
+      "ineligible": [],
+      "notes": []
+    },
+    "license_capabilities": [],
+    "regulatory_bodies": [
+      {
+        "name": "Bank of Italy",
+        "abbreviation": "BOI",
+        "oversight_areas": [
+          "banking",
+          "payment_systems",
+          "aml"
+        ]
+      },
+      {
+        "name": "CONSOB",
+        "abbreviation": "CONSOB",
+        "oversight_areas": [
+          "securities",
+          "markets"
+        ]
+      }
+    ],
+    "banking": {
+      "central_bank": "Bank of Italy / ECB",
+      "currency": "EUR",
+      "fx_controls": false,
+      "fx_authority": null,
+      "correspondent_banks": [],
+      "domestic_swift_banks": []
+    },
+    "treaty_memberships": [],
+    "aml_framework": "EU Anti-Money Laundering Directives / UIF",
+    "sanctions_exposure": [],
+    "learned_notes": [],
+    "last_updated": "2026-02-12T20:09:38.049449+00:00"
+  }
+}

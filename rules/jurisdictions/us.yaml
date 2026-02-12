@@ -1,0 +1,137 @@
+# ============================================================
+# JURISDICTION RULES — UNITED STATES
+# ============================================================
+# Defines required clauses, regulatory checks, and
+# conditional requirements for US-governed transactions.
+# ============================================================
+
+jurisdiction: "US"
+name: "United States of America"
+legal_system: "common_law"
+currency: "USD"
+primary_regulators:
+  - "Securities and Exchange Commission (SEC)"
+  - "Financial Industry Regulatory Authority (FINRA)"
+  - "Commodity Futures Trading Commission (CFTC)"
+  - "Office of the Comptroller of the Currency (OCC)"
+  - "Federal Reserve Board"
+  - "Financial Crimes Enforcement Network (FinCEN)"
+  - "Office of Foreign Assets Control (OFAC)"
+
+# --- Required Clauses (Always) ---
+required_clauses:
+  - governing_law
+  - arbitration_clause
+  - aml_representation
+  - ofac_compliance
+  - representations
+  - indemnification
+  - limitation_of_liability
+  - signatory_block
+
+# --- AML / Sanctions ---
+aml_requirements:
+  statutes:
+    - name: "Bank Secrecy Act"
+      citation: "31 U.S.C. § 5311 et seq."
+    - name: "USA PATRIOT Act"
+      citation: "Pub. L. 107-56"
+    - name: "OFAC Sanctions Regulations"
+      citation: "31 C.F.R. Parts 500-599"
+    - name: "FinCEN CDD Rule"
+      citation: "31 C.F.R. § 1010.230"
+  require_beneficial_ownership_declaration: true
+  require_sanctions_screening: true
+  require_pep_screening: true
+
+# --- If Security Offering ---
+if_security_offering:
+  require:
+    - reg_d_or_144a_language
+    - accredited_investor_representation
+    - transfer_restrictions
+    - no_public_offering_disclaimer
+    - risk_factor_disclosure
+  reg_d:
+    rule: "Regulation D under the Securities Act of 1933"
+    citation: "17 C.F.R. § 230.501-508"
+    accredited_investor_threshold_individual: 1000000  # net worth excl. primary residence
+    accredited_investor_income_threshold: 200000
+  reg_144a:
+    rule: "Rule 144A under the Securities Act of 1933"
+    citation: "17 C.F.R. § 230.144A"
+    qualified_institutional_buyer_threshold: 100000000
+
+# --- If Secured Transaction ---
+if_secured:
+  require:
+    - ucc_security_interest
+    - ucc_filing_authorization
+    - collateral_description
+  ucc_reference:
+    article: "UCC Article 9"
+    citation: "Uniform Commercial Code § 9-101 et seq."
+  filing_office: "Secretary of State of the debtor's jurisdiction"
+
+# --- If Cross-Border ---
+if_cross_border:
+  require:
+    - source_of_funds_representation
+    - anti_bribery_compliance
+    - fcpa_representation
+    - tax_withholding_clause
+    - currency_controls_acknowledgment
+  anti_bribery:
+    statute: "Foreign Corrupt Practices Act"
+    citation: "15 U.S.C. §§ 78dd-1 et seq."
+  tax:
+    withholding_rate_default: 30
+    treaty_override: true
+    require_w8_or_w9: true
+
+# --- If Entity is Broker-Dealer ---
+if_broker_dealer:
+  require_license_from:
+    - "FINRA"
+    - "SEC"
+  require_net_capital_compliance: true
+  require_customer_protection_rule: true
+  sec_rule_15c3_1: true
+  sec_rule_15c3_3: true
+
+# --- If Entity is RIA ---
+if_ria:
+  require_license_from:
+    - "SEC"
+  require_form_adv: true
+  require_fiduciary_duty_acknowledgment: true
+
+# --- If Entity is Bank ---
+if_bank:
+  require_license_from:
+    - "OCC"
+    - "Federal Reserve"
+    - "FDIC"
+  require_fdic_insured_status: true
+
+# --- Governing Law Defaults ---
+governing_law:
+  default_state: "New York"
+  alternative_states:
+    - "Delaware"
+    - "California"
+  federal_preemption_note: "Federal securities laws preempt conflicting state provisions"
+
+# --- Dispute Resolution ---
+dispute_resolution:
+  preferred: "arbitration"
+  arbitration_body: "American Arbitration Association (AAA)"
+  alternative: "Federal courts of the Southern District of New York"
+  waive_jury_trial: true
+
+# --- Signatory Requirements ---
+signatory_requirements:
+  require_board_resolution: true
+  require_officer_certificate: true
+  require_notarization: false
+  require_legal_opinion: true  # for institutional transactions

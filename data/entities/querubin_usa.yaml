@@ -1,0 +1,117 @@
+# ============================================================
+# ENTITY — Querubin USA, LLC
+# ============================================================
+# Source: CIS - QUERUBIN USA LLC #2 - As of February 2025
+# Conforms to: data/entities/_schema.yaml v1.0
+# ============================================================
+
+entity:
+  legal_name: "Querubin USA, LLC"
+  trade_name: "Querubin USA"
+  jurisdiction: "US-NY"
+  formation_date: "2019-06-06"
+  entity_type: llc
+  registration_number: "querubin-ny-2019"
+  ein: "84-1975191"
+  lei: null
+
+  regulatory_status:
+    is_bank: false
+    is_broker_dealer: false
+    is_ria: false
+    is_fund: false
+    is_insurance_company: false
+    is_money_services_business: false
+    is_government_entity: false
+    is_non_profit: false
+
+  licenses: []
+
+  directors:
+    - name: "Domenico Savio Danieli"
+      title: "President — Europa Director"
+      authority_scope: full
+      nationality: "IT"
+      pep_status: false
+
+    - name: "Rudy Agustin Rodriguez"
+      title: "President — USA Director"
+      authority_scope: full
+      nationality: "US"
+      pep_status: false
+
+  signatories:
+    - name: "Domenico Savio Danieli"
+      title: "President — Europa Director"
+      can_bind_company: true
+      can_move_funds: true
+      can_pledge_assets: true
+      authorization_document: "Operating Agreement"
+      signature_authority_limit: null
+
+    - name: "Rudy Agustin Rodriguez"
+      title: "President — USA Director"
+      can_bind_company: true
+      can_move_funds: true
+      can_pledge_assets: true
+      authorization_document: "Operating Agreement"
+      signature_authority_limit: null
+
+  consultants:
+    - name: "Julio Ramon Fernandez"
+      role: "USA Consultant"
+      nationality: "US"
+
+  banking:
+    # Primary: BNY Mellon / Pershing
+    custodian: "Pershing LLC"
+    account_type: brokerage
+    settlement_bank: "The Bank of New York Mellon Corporation"
+    swift_code: "IRVTUS3N"
+    aba_routing: "021000018"
+    beneficiary_account_name: "Pershing LLC"
+    beneficiary_account_number: "890-051238-5"
+    ultimate_beneficiary_name: "Querubin USA, LLC"
+    ultimate_beneficiary_account: "TG1014996"
+    escrow_required: false
+    correspondent_bank: "The Bank Of New York Mellon SA/N Spain"
+    correspondent_address: "Jose Abascal 45, Planta 4, Madrid, Spain 28003"
+    euroclear_dvp: "98730"
+    dtc_number: "TG1014996"
+
+    # Secondary: Merrill Lynch
+    secondary_bank: "Merrill Lynch"
+    secondary_swift: "BOFAUS3N"
+    secondary_aba: "026009593"
+    secondary_account: "72503022"
+    secondary_further_credit: "725-03022"
+    secondary_bank_officer: "Michael Gorsky"
+    secondary_officer_title: "Senior VP & Financial Advisor"
+
+  beneficial_owners:
+    - name: "Domenico Savio Danieli"
+      ownership_percentage: 50
+      nationality: "IT"
+      pep_status: false
+      sanctions_screened: false
+      screening_date: null
+      residence_country: "CH"
+      passport_number: "YC3780400"
+
+    - name: "Rudy Agustin Rodriguez"
+      ownership_percentage: 50
+      nationality: "US"
+      pep_status: false
+      sanctions_screened: false
+      screening_date: null
+      residence_country: "US"
+      passport_number: "A36089964"
+
+  registered_address:
+    street: "182 Rose Ave Ste 718"
+    city: "Staten Island"
+    state_province: "New York"
+    postal_code: "10306"
+    country: "US"
+
+  business_description: "Business Investing Company"

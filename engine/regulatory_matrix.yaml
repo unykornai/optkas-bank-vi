@@ -1,0 +1,282 @@
+# Regulatory Matrix
+# =================
+# Maps each jurisdiction to its regulatory authorities per activity type.
+# Used by the regulatory claim validator to check:
+#   - Is the claimed regulator valid for that jurisdiction?
+#   - Is the claimed activity legally possible without specific licenses?
+#   - Does the entity type match the declared activity?
+#
+# This is the source of truth for regulatory validation.
+
+jurisdictions:
+
+  US:
+    name: "United States"
+    regulators:
+      banking:
+        primary: ["OCC", "FDIC", "Federal Reserve"]
+        description: "National banks (OCC), state banks (FDIC), bank holding companies (Fed)"
+        requires_license: true
+      securities:
+        primary: ["SEC"]
+        self_regulatory: ["FINRA"]
+        description: "Securities registration and broker-dealer oversight"
+        requires_license: true
+      broker_dealer:
+        primary: ["SEC"]
+        self_regulatory: ["FINRA"]
+        description: "Broker-dealer registration required for securities intermediation"
+        requires_license: true
+      investment_adviser:
+        primary: ["SEC"]
+        state: ["State Securities Regulators"]
+        description: "SEC for >$100M AUM, state for <$100M"
+        requires_license: true
+      custody:
+        primary: ["SEC"]
+        description: "Qualified custodian requirement under Rule 206(4)-2"
+        requires_banking_license: false
+        requires_bd_or_ria: true
+      insurance:
+        primary: ["State Insurance Commissioners"]
+        description: "Insurance regulated at state level"
+        requires_license: true
+      money_services:
+        primary: ["FinCEN"]
+        state: ["State Money Transmitter Regulators"]
+        description: "MSB registration with FinCEN, state-level money transmitter licenses"
+        requires_license: true
+      foreign_exchange:
+        primary: ["CFTC"]
+        description: "FX dealing regulated by CFTC for retail"
+        requires_license: true
+      fund:
+        primary: ["SEC"]
+        description: "Investment Company Act 1940 / Advisers Act"
+        requires_license: true
+
+  VN:
+    name: "Vietnam"
+    regulators:
+      banking:
+        primary: ["SBV"]
+        description: "State Bank of Vietnam — all banking activities"
+        requires_license: true
+      securities:
+        primary: ["SSC"]
+        description: "State Securities Commission — securities market oversight"
+        requires_license: true
+      broker_dealer:
+        primary: ["SSC"]
+        description: "Securities companies require SSC license"
+        requires_license: true
+      investment_adviser:
+        primary: ["SSC"]
+        description: "Investment advisory requires SSC registration"
+        requires_license: true
+      custody:
+        primary: ["SBV"]
+        description: "Custody services require banking license from SBV"
+        requires_banking_license: true
+        note: "Only licensed banks can provide custody in Vietnam"
+      insurance:
+        primary: ["MOF"]
+        description: "Ministry of Finance — insurance licensing"
+        requires_license: true
+      money_services:
+        primary: ["SBV"]
+        description: "All payment/remittance services under SBV"
+        requires_license: true
+      foreign_exchange:
+        primary: ["SBV"]
+        description: "All FX transactions require SBV approval"
+        requires_license: true
+      fund:
+        primary: ["SSC"]
+        description: "Fund management requires SSC license"
+        requires_license: true
+
+  CH:
+    name: "Switzerland"
+    regulators:
+      banking:
+        primary: ["FINMA"]
+        description: "Swiss Financial Market Supervisory Authority"
+        requires_license: true
+      securities:
+        primary: ["FINMA"]
+        description: "Securities dealer licensing under FINMA"
+        requires_license: true
+      broker_dealer:
+        primary: ["FINMA"]
+        description: "Securities dealer license"
+        requires_license: true
+      investment_adviser:
+        primary: ["FINMA"]
+        description: "Asset manager licensing under FINIG"
+        requires_license: true
+      custody:
+        primary: ["FINMA"]
+        description: "Custody through licensed banks or securities dealers"
+        requires_banking_license: false
+      insurance:
+        primary: ["FINMA"]
+        description: "Insurance supervision under FINMA"
+        requires_license: true
+      money_services:
+        primary: ["FINMA"]
+        description: "Payment services licensing"
+        requires_license: true
+      foreign_exchange:
+        primary: ["FINMA"]
+        description: "FX dealing through licensed entities"
+        requires_license: true
+      fund:
+        primary: ["FINMA"]
+        description: "Collective investment scheme licensing"
+        requires_license: true
+
+  GB:
+    name: "United Kingdom"
+    regulators:
+      banking:
+        primary: ["PRA", "FCA"]
+        description: "Prudential Regulation Authority and Financial Conduct Authority"
+        requires_license: true
+      securities:
+        primary: ["FCA"]
+        description: "Financial Conduct Authority — markets oversight"
+        requires_license: true
+      broker_dealer:
+        primary: ["FCA"]
+        description: "FCA authorization for dealing in investments"
+        requires_license: true
+      investment_adviser:
+        primary: ["FCA"]
+        description: "FCA authorization for investment advice"
+        requires_license: true
+      custody:
+        primary: ["FCA"]
+        description: "Safeguarding and administering investments"
+        requires_banking_license: false
+      insurance:
+        primary: ["PRA", "FCA"]
+        description: "Dual-regulated — PRA for prudential, FCA for conduct"
+        requires_license: true
+      money_services:
+        primary: ["FCA"]
+        description: "Payment services / e-money regulations"
+        requires_license: true
+      foreign_exchange:
+        primary: ["FCA"]
+        description: "FX dealing authorization"
+        requires_license: true
+      fund:
+        primary: ["FCA"]
+        description: "Authorised fund manager / AIFM"
+        requires_license: true
+
+  SG:
+    name: "Singapore"
+    regulators:
+      banking:
+        primary: ["MAS"]
+        description: "Monetary Authority of Singapore — all financial regulation"
+        requires_license: true
+      securities:
+        primary: ["MAS"]
+        description: "Capital Markets Services License"
+        requires_license: true
+      broker_dealer:
+        primary: ["MAS"]
+        description: "Dealing in capital markets products"
+        requires_license: true
+      investment_adviser:
+        primary: ["MAS"]
+        description: "Fund management / RFMC / LFMC licensing"
+        requires_license: true
+      custody:
+        primary: ["MAS"]
+        description: "Custodial services for securities"
+        requires_banking_license: false
+      insurance:
+        primary: ["MAS"]
+        description: "Insurance licensing under Insurance Act"
+        requires_license: true
+      money_services:
+        primary: ["MAS"]
+        description: "Payment Services Act licensing"
+        requires_license: true
+      foreign_exchange:
+        primary: ["MAS"]
+        description: "Licensed financial institution for FX"
+        requires_license: true
+      fund:
+        primary: ["MAS"]
+        description: "Capital Markets Services License — fund management"
+        requires_license: true
+
+  KY:
+    name: "Cayman Islands"
+    regulators:
+      banking:
+        primary: ["CIMA"]
+        description: "Cayman Islands Monetary Authority"
+        requires_license: true
+      securities:
+        primary: ["CIMA"]
+        description: "Securities Investment Business Law"
+        requires_license: true
+      broker_dealer:
+        primary: ["CIMA"]
+        description: "Securities investment business licensing"
+        requires_license: true
+      investment_adviser:
+        primary: ["CIMA"]
+        description: "Securities Investment Business Law — advisory"
+        requires_license: true
+      custody:
+        primary: ["CIMA"]
+        description: "Custody through licensed entities"
+        requires_banking_license: false
+      insurance:
+        primary: ["CIMA"]
+        description: "Insurance licensing under CIMA"
+        requires_license: true
+      money_services:
+        primary: ["CIMA"]
+        description: "Money services business licensing"
+        requires_license: true
+      foreign_exchange:
+        primary: ["CIMA"]
+        description: "No FX controls — open regime"
+        requires_license: false
+      fund:
+        primary: ["CIMA"]
+        description: "Registered/Regulated fund categories"
+        requires_license: true
+
+# Activity-to-regulatory-status mapping
+# Maps regulatory_status flags to the activity types above
+activity_mapping:
+  is_bank: "banking"
+  is_broker_dealer: "broker_dealer"
+  is_ria: "investment_adviser"
+  is_fund: "fund"
+  is_insurance_company: "insurance"
+  is_money_services_business: "money_services"
+  is_swap_dealer: "securities"
+  is_msp: "securities"
+
+# License type to activity mapping
+license_activity_mapping:
+  broker_dealer: "broker_dealer"
+  registered_investment_adviser: "investment_adviser"
+  custody: "custody"
+  banking: "banking"
+  insurance: "insurance"
+  money_transmitter: "money_services"
+  securities: "securities"
+  fund_management: "fund"
+  payment_services: "money_services"
+  capital_markets: "securities"
