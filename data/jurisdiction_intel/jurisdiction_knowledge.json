@@ -153,7 +153,7 @@
       "FATCA (tax reporting)"
     ],
     "learned_notes": [],
-    "last_updated": "2026-02-12T20:09:38.049449+00:00"
+    "last_updated": "2026-02-12T20:45:21.688225+00:00"
   },
   "VN": {
     "jurisdiction_code": "VN",
@@ -277,7 +277,7 @@
     "learned_notes": [
       "[2026-02-12] Learned license type 'securities_activities' from Vietnam Ministry of Finance"
     ],
-    "last_updated": "2026-02-12T20:09:38.049449+00:00"
+    "last_updated": "2026-02-12T20:45:21.688225+00:00"
   },
   "CH": {
     "jurisdiction_code": "CH",
@@ -325,7 +325,7 @@
     "aml_framework": "AMLA (Anti-Money Laundering Act) / FINMA",
     "sanctions_exposure": [],
     "learned_notes": [],
-    "last_updated": "2026-02-12T20:09:38.049449+00:00"
+    "last_updated": "2026-02-12T20:45:21.688225+00:00"
   },
   "IT": {
     "jurisdiction_code": "IT",
@@ -371,6 +371,6 @@
     "aml_framework": "EU Anti-Money Laundering Directives / UIF",
     "sanctions_exposure": [],
     "learned_notes": [],
-    "last_updated": "2026-02-12T20:09:38.049449+00:00"
+    "last_updated": "2026-02-12T20:45:21.688225+00:00"
   }
 }

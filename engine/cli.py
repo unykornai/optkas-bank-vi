@@ -37,6 +37,9 @@ Commands:
   wire-instructions  — Generate institutional wire instruction packages
   signing-ceremony   — Prepare deal signing with authority validation
   deal-dashboard     — Unified deal status dashboard (all engines)
+  escrow-plan        — Build escrow & settlement rail plan
+  banking-resolve    — Resolve banking gaps across deal group
+  cp-status          — Auto-resolve closing conditions from evidence
 """
 
 from __future__ import annotations
@@ -91,6 +94,9 @@ from engine.settlement_onboarding import SettlementOnboardingEngine
 from engine.wire_instructions import WireInstructionEngine
 from engine.signing_ceremony import SigningCeremonyEngine
 from engine.deal_dashboard import DealDashboardEngine
+from engine.escrow_engine import EscrowEngine
+from engine.banking_resolver import BankingResolverEngine
+from engine.cp_resolution import CPResolutionEngine
 from engine._icons import ICON_CHECK, ICON_CROSS, ICON_WARN
 
 console = Console()
@@ -1485,6 +1491,96 @@ def deal_dashboard_cmd(
 
     if do_save:
         path = engine.save(dashboard)
+        console.print(f"\n{ICON_CHECK} Saved: {path}", style="green")
+
+
+# ---------------------------------------------------------------------------
+# escrow-plan
+# ---------------------------------------------------------------------------
+
+@main.command("escrow-plan")
+@click.option("-n", "--name", "deal_name", required=True, help="Deal group name")
+@click.option("-e", "--entity", "entity_paths", multiple=True, help="Entity YAML path(s)")
+@click.option("-c", "--currency", default="USD", help="Escrow currency (default: USD)")
+@click.option("-a", "--amount", default=0.0, type=float, help="Escrow amount")
+@click.option("--save", "do_save", is_flag=True, help="Save escrow plan to JSON")
+def escrow_plan_cmd(
+    deal_name: str, entity_paths: tuple, currency: str, amount: float, do_save: bool,
+):
+    """Build escrow & settlement rail plan."""
+    engine = EscrowEngine()
+    plan = engine.build(
+        deal_name=deal_name,
+        entity_paths=[Path(e) for e in entity_paths] if entity_paths else None,
+        escrow_currency=currency,
+        escrow_amount=amount,
+    )
+
+    color = "green" if plan.overall_valid else "red"
+    console.print(Panel(plan.summary(), title="ESCROW & SETTLEMENT RAIL PLAN", border_style=color))
+
+    if do_save:
+        path = engine.save(plan)
+        console.print(f"\n{ICON_CHECK} Saved: {path}", style="green")
+
+
+# ---------------------------------------------------------------------------
+# banking-resolve
+# ---------------------------------------------------------------------------
+
+@main.command("banking-resolve")
+@click.option("-n", "--name", "deal_name", required=True, help="Deal group name")
+@click.option("-e", "--entity", "entity_paths", multiple=True, help="Entity YAML path(s)")
+@click.option("--save", "do_save", is_flag=True, help="Save resolution plan to JSON")
+def banking_resolve_cmd(deal_name: str, entity_paths: tuple, do_save: bool):
+    """Resolve banking gaps across deal group."""
+    engine = BankingResolverEngine()
+    plan = engine.resolve(
+        deal_name=deal_name,
+        entity_paths=[Path(e) for e in entity_paths] if entity_paths else None,
+    )
+
+    color = "green" if plan.all_resolved else ("yellow" if plan.critical_entities == 0 else "red")
+    console.print(Panel(plan.summary(), title="BANKING RESOLUTION", border_style=color))
+
+    if do_save:
+        path = engine.save(plan)
+        console.print(f"\n{ICON_CHECK} Saved: {path}", style="green")
+
+
+# ---------------------------------------------------------------------------
+# cp-status
+# ---------------------------------------------------------------------------
+
+@main.command("cp-status")
+@click.option("-n", "--name", "deal_name", required=True, help="Deal group name")
+@click.option("-i", "--issuer", default=None, help="Path to issuer entity YAML")
+@click.option("-s", "--spv", default=None, help="Path to SPV entity YAML")
+@click.option("-e", "--entity", "extra_entities", multiple=True, help="Additional entity YAML(s)")
+@click.option("--save", "do_save", is_flag=True, help="Save resolution report to JSON")
+def cp_status_cmd(
+    deal_name: str, issuer: str | None, spv: str | None,
+    extra_entities: tuple, do_save: bool,
+):
+    """Auto-resolve closing conditions from evidence & entity data."""
+    engine = CPResolutionEngine()
+    report = engine.resolve(
+        deal_name=deal_name,
+        issuer_path=Path(issuer) if issuer else None,
+        spv_path=Path(spv) if spv else None,
+        additional_entities=[Path(e) for e in extra_entities] if extra_entities else None,
+    )
+
+    if report.remaining_open == 0:
+        color = "green"
+    elif report.auto_resolved > 0:
+        color = "yellow"
+    else:
+        color = "red"
+    console.print(Panel(report.summary(), title="CP RESOLUTION STATUS", border_style=color))
+
+    if do_save:
+        path = engine.save(report)
         console.print(f"\n{ICON_CHECK} Saved: {path}", style="green")
 
 

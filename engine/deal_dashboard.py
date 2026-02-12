@@ -40,6 +40,9 @@ from engine.risk_scorer import CounterpartyRiskEngine
 from engine.closing_tracker import ClosingTrackerEngine
 from engine.settlement_onboarding import SettlementOnboardingEngine
 from engine.correspondent_banking import CorrespondentBankingEngine
+from engine.escrow_engine import EscrowEngine
+from engine.banking_resolver import BankingResolverEngine
+from engine.cp_resolution import CPResolutionEngine
 
 
 # ---------------------------------------------------------------------------
@@ -253,8 +256,20 @@ class DealDashboardEngine:
         dashboard.sections.append(
             self._assess_closing(deal_name, issuer_path, spv_path, additional_entities)
         )
-        dashboard.sections.append(self._assess_settlement(all_paths))
-        dashboard.sections.append(self._assess_onboarding(deal_name, all_paths))
+        dashboard.sections.append(
+            self._assess_settlement_enhanced(deal_name, all_paths)
+        )
+        dashboard.sections.append(
+            self._assess_onboarding_enhanced(deal_name, all_paths)
+        )
+        dashboard.sections.append(
+            self._assess_escrow(deal_name, all_paths)
+        )
+        dashboard.sections.append(
+            self._assess_cp_resolution(
+                deal_name, issuer_path, spv_path, additional_entities
+            )
+        )
 
         return dashboard
 
@@ -600,6 +615,249 @@ class DealDashboardEngine:
             )
             section.score = plan.complete
             section.max_score = plan.total_entities
+
+        except Exception as exc:
+            section.rag = "RED"
+            section.headline = f"Error: {exc}"
+
+        return section
+
+    def _assess_settlement_enhanced(
+        self, deal_name: str, all_paths: list[Path],
+    ) -> DashboardSection:
+        """Settlement Path section — enhanced with escrow engine."""
+        section = DashboardSection(name="Settlement")
+
+        if len(all_paths) < 2:
+            section.rag = "GREY"
+            section.headline = "Need at least 2 entities for settlement path."
+            return section
+
+        try:
+            engine = EscrowEngine()
+            plan = engine.build(
+                deal_name=deal_name,
+                entity_paths=all_paths,
+                escrow_currency="USD",
+            )
+
+            if plan.overall_valid:
+                section.rag = "GREEN"
+                section.headline = (
+                    f"Settlement rails valid. {plan.total_legs} leg(s), "
+                    f"{plan.total_nodes} nodes. Escrow: "
+                    f"{plan.escrow_terms.escrow_agent if plan.escrow_terms else 'TBD'}."
+                )
+            else:
+                # Has legs but with issues — AMBER if legs exist, RED if none
+                if plan.valid_legs > 0:
+                    section.rag = "AMBER"
+                    section.headline = (
+                        f"{plan.valid_legs}/{plan.total_legs} legs valid. "
+                        f"{len(plan.overall_issues)} issue(s) remaining."
+                    )
+                else:
+                    section.rag = "AMBER"
+                    section.headline = (
+                        f"Escrow plan built. {plan.total_legs} leg(s), "
+                        f"{plan.total_nodes} nodes. "
+                        f"{len(plan.overall_issues)} issue(s) to resolve."
+                    )
+
+            section.score = plan.valid_legs
+            section.max_score = plan.total_legs if plan.total_legs > 0 else 1
+
+            if plan.escrow_terms:
+                section.details.append(
+                    f"Escrow: {plan.escrow_terms.escrow_agent} "
+                    f"[{plan.escrow_terms.escrow_agent_swift}]"
+                )
+
+            for issue in plan.overall_issues[:3]:
+                section.action_items.append(f"Settlement: {issue}")
+
+            for rec in plan.recommendations[:2]:
+                section.details.append(rec)
+
+        except Exception as exc:
+            section.rag = "RED"
+            section.headline = f"Error: {exc}"
+
+        return section
+
+    def _assess_onboarding_enhanced(
+        self, deal_name: str, all_paths: list[Path],
+    ) -> DashboardSection:
+        """Banking Onboarding section — enhanced with banking resolver."""
+        section = DashboardSection(name="Banking Onboarding")
+
+        try:
+            engine = BankingResolverEngine()
+            plan = engine.resolve(
+                deal_name=deal_name,
+                entity_paths=all_paths if all_paths else None,
+            )
+
+            if plan.all_resolved:
+                section.rag = "GREEN"
+                section.headline = (
+                    f"All {plan.total_entities} entities have resolved banking."
+                )
+            elif plan.critical_entities == 0:
+                section.rag = "AMBER"
+                section.headline = (
+                    f"{plan.fully_resolved}/{plan.total_entities} resolved. "
+                    f"{plan.total_gaps} minor gap(s)."
+                )
+            else:
+                section.rag = "AMBER"
+                section.headline = (
+                    f"{plan.fully_resolved}/{plan.total_entities} resolved. "
+                    f"{plan.total_critical} critical gap(s). "
+                    f"Recommended banks assigned."
+                )
+
+            section.score = plan.fully_resolved
+            section.max_score = plan.total_entities
+
+            section.details.append(
+                f"Resolved: {plan.fully_resolved}  |  "
+                f"Critical: {plan.critical_entities}  |  "
+                f"Gaps: {plan.total_gaps}"
+            )
+
+            for p in plan.profiles:
+                if p.status == "CRITICAL_GAPS":
+                    section.action_items.append(
+                        f"Onboard {p.entity_name} with "
+                        f"{p.resolved_bank} [{p.resolved_swift}]"
+                    )
+
+        except Exception as exc:
+            section.rag = "RED"
+            section.headline = f"Error: {exc}"
+
+        return section
+
+    def _assess_escrow(
+        self, deal_name: str, all_paths: list[Path],
+    ) -> DashboardSection:
+        """Escrow Arrangement section."""
+        section = DashboardSection(name="Escrow")
+
+        if len(all_paths) < 2:
+            section.rag = "GREY"
+            section.headline = "Need at least 2 entities for escrow."
+            return section
+
+        try:
+            engine = EscrowEngine()
+            plan = engine.build(
+                deal_name=deal_name,
+                entity_paths=all_paths,
+                escrow_currency="USD",
+            )
+
+            if plan.escrow_terms:
+                et = plan.escrow_terms
+                section.score = et.met_count
+                section.max_score = len(et.conditions)
+
+                if et.all_conditions_met:
+                    section.rag = "GREEN"
+                    section.headline = (
+                        f"Escrow ready. Agent: {et.escrow_agent}. "
+                        f"All {len(et.conditions)} conditions met."
+                    )
+                elif et.met_count > 0:
+                    section.rag = "AMBER"
+                    section.headline = (
+                        f"Escrow: {et.escrow_agent}. "
+                        f"{et.met_count}/{len(et.conditions)} conditions met."
+                    )
+                else:
+                    section.rag = "AMBER"
+                    section.headline = (
+                        f"Escrow agent selected: {et.escrow_agent} "
+                        f"[{et.escrow_agent_swift}]. "
+                        f"{et.pending_count} conditions pending."
+                    )
+
+                section.details.append(
+                    f"Currency: {et.escrow_currency} | "
+                    f"Type: {et.escrow_type} | "
+                    f"Release: {et.release_mechanism}"
+                )
+
+                for cond in et.conditions:
+                    if not cond.is_met:
+                        section.action_items.append(
+                            f"Escrow {cond.condition_id}: {cond.description[:50]}"
+                        )
+                        if len(section.action_items) >= 3:
+                            break
+            else:
+                section.rag = "RED"
+                section.headline = "No escrow arrangement could be established."
+
+        except Exception as exc:
+            section.rag = "RED"
+            section.headline = f"Error: {exc}"
+
+        return section
+
+    def _assess_cp_resolution(
+        self, deal_name: str, issuer_path: Path | None,
+        spv_path: Path | None, extra: list[Path] | None,
+    ) -> DashboardSection:
+        """CP Resolution section — auto-resolved closing conditions."""
+        section = DashboardSection(name="CP Resolution")
+
+        try:
+            engine = CPResolutionEngine()
+            report = engine.resolve(
+                deal_name=deal_name,
+                issuer_path=issuer_path,
+                spv_path=spv_path,
+                additional_entities=extra,
+            )
+
+            section.score = report.auto_resolved + report.satisfied
+            section.max_score = report.total_cps
+
+            if report.remaining_open == 0:
+                section.rag = "GREEN"
+                section.headline = (
+                    f"All {report.total_cps} CPs resolved or in progress."
+                )
+            elif report.resolution_pct >= 50:
+                section.rag = "AMBER"
+                section.headline = (
+                    f"{report.resolution_pct:.0f}% resolved. "
+                    f"{report.auto_resolved} auto-resolved, "
+                    f"{report.remaining_open} open."
+                )
+            else:
+                section.rag = "AMBER"
+                section.headline = (
+                    f"{report.resolution_pct:.0f}% resolved. "
+                    f"{report.remaining_open} CPs still open."
+                )
+
+            section.details.append(
+                f"Total: {report.total_cps} | Satisfied: {report.satisfied} | "
+                f"In Progress: {report.moved_to_in_progress} | "
+                f"Open: {report.remaining_open}"
+            )
+
+            # List remaining open CPs as action items
+            for r in report.resolutions:
+                if r.new_status == "OPEN":
+                    section.action_items.append(
+                        f"CP {r.cp_id}: {r.description[:50]}"
+                    )
+                    if len(section.action_items) >= 3:
+                        break
 
         except Exception as exc:
             section.rag = "RED"

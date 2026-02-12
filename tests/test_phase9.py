@@ -539,15 +539,15 @@ class TestDealDashboard:
         closing = next(s for s in self.dashboard.sections if s.name == "Closing Conditions")
         assert closing.rag == "RED"
 
-    def test_settlement_section_red(self):
-        """Settlement should be RED (missing banking intermediary)."""
+    def test_settlement_section_resolved(self):
+        """Settlement should be GREEN or AMBER (escrow engine resolves rails)."""
         settlement = next(s for s in self.dashboard.sections if s.name == "Settlement")
-        assert settlement.rag == "RED"
+        assert settlement.rag in ("GREEN", "AMBER")
 
-    def test_onboarding_section_red(self):
-        """Onboarding should be RED (entities need banking)."""
+    def test_onboarding_section_resolved(self):
+        """Onboarding should be GREEN or AMBER (banking resolver assigns banks)."""
         onboarding = next(s for s in self.dashboard.sections if s.name == "Banking Onboarding")
-        assert onboarding.rag == "RED"
+        assert onboarding.rag in ("GREEN", "AMBER")
 
     def test_action_items_populated(self):
         """Should have action items across multiple sections."""
